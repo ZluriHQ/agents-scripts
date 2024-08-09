@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>DisableLogout</key>
+			<string>true</string>
+			<key>AgentOpenLoginTab</key>
+			<string>true</string>
+			<key>OrgToken</key>
+			<string>605072ae40973f002d004cc5</string>
+			<key>PayloadDescription</key>
+			<string>com.google.Chrome.extensions.cmobkdiplndgpjodaioofofmcikimbdb</string>
+			<key>PayloadDisplayName</key>
+			<string>com.google.Chrome.extensions.cmobkdiplndgpjodaioofofmcikimbdb</string>
+			<key>PayloadIdentifier</key>
+			<string>io.se.kandji.01F98679-C794-4229-8A53-F0E96D2DBD8E</string>
+			<key>PayloadOrganization</key>
+			<string>Kandji, Inc.</string>
+			<key>PayloadType</key>
+			<string>com.google.Chrome.extensions.cmobkdiplndgpjodaioofofmcikimbdb</string>
+			<key>PayloadUUID</key>
+			<string>D82707B4-0B93-4F8D-9CCA-D34AE693DCB3</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>com.google.Chrome.extensions.cmobkdiplndgpjodaioofofmcikimbdb</string>
+	<key>PayloadDisplayName</key>
+	<string>com.google.Chrome.extensions.cmobkdiplndgpjodaioofofmcikimbdb</string>
+	<key>PayloadIdentifier</key>
+	<string>io.kandji.customprofile.CECE4888-783A-4FDD-B9CB-39BD1C55C2F0</string>
+	<key>PayloadOrganization</key>
+	<string>Kandji, Inc.</string>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>BA780F02-799E-4535-80CB-14893F6BDC5C</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>
