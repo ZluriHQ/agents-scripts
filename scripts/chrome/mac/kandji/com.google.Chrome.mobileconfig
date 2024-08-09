@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>ExtensionSettings</key>
+			<dict>
+				<key>cmobkdiplndgpjodaioofofmcikimbdb</key>
+				<dict>
+					<key>installation_mode</key>
+					<string>force_installed</string>
+					<key>update_url</key>
+					<string>https://clients2.google.com/service/update2/crx</string>
+				</dict>
+			</dict>
+			<key>PayloadDescription</key>
+			<string>com.google.Chrome</string>
+			<key>PayloadDisplayName</key>
+			<string>com.google.Chrome</string>
+			<key>PayloadIdentifier</key>
+			<string>io.se.kandji.B1F4414B-E6EC-43BA-8894-8885693FE856</string>
+			<key>PayloadOrganization</key>
+			<string>Kandji, Inc.</string>
+			<key>PayloadType</key>
+			<string>com.google.Chrome</string>
+			<key>PayloadUUID</key>
+			<string>6738811D-67CA-4425-B92E-BB9AA2352065</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>com.google.Chrome</string>
+	<key>PayloadDisplayName</key>
+	<string>com.google.Chrome</string>
+	<key>PayloadIdentifier</key>
+	<string>io.kandji.customprofile.7D0F6DE9-68E9-409A-AD5F-CF183CA976B3</string>
+	<key>PayloadOrganization</key>
+	<string>Kandji, Inc.</string>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>0BF74D20-BD73-4BC2-B6EC-AA5EEC9645D8</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>
