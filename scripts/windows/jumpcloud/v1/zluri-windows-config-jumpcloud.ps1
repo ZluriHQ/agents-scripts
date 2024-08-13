@@ -1,3 +1,19 @@
+# If Nuget is not installed, go ahead and install it
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$PkgProvider = Get-PackageProvider
+
+If ("Nuget" -notin $PkgProvider.Name){
+    Install-PackageProvider -Name NuGet -Force
+}
+
+# If PSModule RunAsUser is not installed, install it
+if ( -not (get-installedModule "RunAsUser" -ErrorAction SilentlyContinue)) {
+    install-module RunAsUser -force
+}
+
+$Command = {
+    #Powershell Command Goes Here.
+
 #expected version. zluri apps lesser than this version will get uninstalled.
 $expectedVersion="3.3.0.0" # Update the minimum version that is expected to be installed
 
@@ -14,8 +30,7 @@ If (-not (Test-Path "$logPathRoot\zluri")) {
     }
 
     # Logger function
-Function Log-Message([String]$Message)
-{
+Function Log-Message([String]$Message){
     Add-Content -Path "$logPathRoot\zluri\zluriscriptlog.txt" $Message
 }
 
@@ -31,20 +46,25 @@ Log-Message "$isZluriApp"
     foreach($zluriApp in $isZluriApp){
         Log-Message "$zluriApp"
         $currentVersion=$zluriApp.version
+
             # Check if expected version is greater than the installed zluri version
         if($expectedVersion -gt $currentVersion){
             Log-Message "checking if $expectedVersion greater than $currentVersion"
             $zluriProcess=Get-Process -Name "zluri"
+
                 # stopping all zluri process
             Log-Message "$zluriProcess"
             $nid = (Get-Process zluri).id
                 Stop-Process -Id $nid -Force
                 Wait-Process -Id $nid -ErrorAction SilentlyContinue
+
                 # Uninstalling zluri app
             $zluriApp.uninstall() | Out-Null
-                # deleting zluri folder from %localappdata%\programs
+
+                # deleting zluri folders
             Remove-Item C:\Users\$env:username\AppData\Local\Programs\zluri -Recurse -Force -ErrorAction silentlycontinue
             Remove-Item C:\Users\$env:username\AppData\Roaming\zluri -Recurse -Force -ErrorAction silentlycontinue
+            
                 # deleting the shortcut on desktop
             $ShortcutsToDelete = Get-ChildItem -Path "C:\Users\$env:username\Desktop" -Filter "zluri.lnk"
             $ShortcutsToDelete | ForEach-Object {
@@ -88,3 +108,7 @@ zluriClientConfigFiles -configFolderPath $env:programdata
 
 # Calling the function to create client-config.json file in localappdata
 zluriClientConfigFiles -configFolderPath $env:localappdata
+
+}
+
+invoke-ascurrentuser -scriptblock $Command
