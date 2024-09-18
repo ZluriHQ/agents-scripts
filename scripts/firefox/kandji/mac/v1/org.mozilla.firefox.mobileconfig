@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>EnterprisePoliciesEnabled</key>
+			<true/>
+			<key>ExtensionSettings</key>
+			<dict>
+				<key>zluribrowseragent@zluri.com</key>
+				<dict>
+					<key>install_url</key>
+					<string>https://addons.mozilla.org/firefox/downloads/file/4241546/zluri_web_extension_firefox-2.3.3.xpi</string>
+					<key>installation_mode</key>
+					<string>force_installed</string>
+				</dict>
+			</dict>
+			<key>PayloadDescription</key>
+			<string>org.mozilla.firefox</string>
+			<key>PayloadDisplayName</key>
+			<string>org.mozilla.firefox</string>
+			<key>PayloadIdentifier</key>
+			<string>io.se.kandji.86F2E28E-FA0F-43D2-866F-120C05C6A544</string>
+			<key>PayloadOrganization</key>
+			<string>Kandji, Inc.</string>
+			<key>PayloadType</key>
+			<string>org.mozilla.firefox</string>
+			<key>PayloadUUID</key>
+			<string>9067A0E0-6ABD-4FFE-8589-532ED769C69B</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>org.mozilla.firefox</string>
+	<key>PayloadDisplayName</key>
+	<string>org.mozilla.firefox</string>
+	<key>PayloadIdentifier</key>
+	<string>io.kandji.customprofile.A2DAF73D-306C-41F3-A65E-A5A04875EC87</string>
+	<key>PayloadOrganization</key>
+	<string>Kandji, Inc.</string>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>BA25AC8D-535D-4F36-B552-42A6C2414E4F</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>
