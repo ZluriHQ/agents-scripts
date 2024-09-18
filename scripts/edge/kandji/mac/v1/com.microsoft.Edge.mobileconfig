@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>ExtensionSettings</key>
+			<dict>
+				<key>llnpohinpfhpnjbfcnmkjfccaengcffb</key>
+				<dict>
+					<key>installation_mode</key>
+					<string>force_installed</string>
+					<key>update_url</key>
+					<string>https://edge.microsoft.com/extensionwebstorebase/v1/crx</string>
+				</dict>
+			</dict>
+			<key>PayloadDescription</key>
+			<string>com.microsoft.Edge</string>
+			<key>PayloadDisplayName</key>
+			<string>com.microsoft.Edge</string>
+			<key>PayloadIdentifier</key>
+			<string>io.se.kandji.A12CC065-3EBE-4ACF-A9CA-43C78AF299C7</string>
+			<key>PayloadOrganization</key>
+			<string>Kandji, Inc.</string>
+			<key>PayloadType</key>
+			<string>com.microsoft.Edge</string>
+			<key>PayloadUUID</key>
+			<string>4990669C-9085-4749-9796-95B400EB7C62</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>com.microsoft.Edge</string>
+	<key>PayloadDisplayName</key>
+	<string>com.microsoft.Edge</string>
+	<key>PayloadIdentifier</key>
+	<string>io.kandji.customprofile.9B80FC95-27FC-42BB-8E09-5E29DADDB6A3</string>
+	<key>PayloadOrganization</key>
+	<string>Kandji, Inc.</string>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>325E62BF-BF0C-4A13-A76D-4DA7D7959116</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>

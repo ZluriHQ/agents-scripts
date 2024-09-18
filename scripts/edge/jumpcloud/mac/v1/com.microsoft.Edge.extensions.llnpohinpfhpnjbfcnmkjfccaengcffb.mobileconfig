@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>AgentOpenLoginTab</key>
+			<string>true</string>
+			<key>DisableLogout</key>
+			<string>false</string>
+			<key>OrgToken</key>
+			<string>605072ae40973f002d004cc5</string>
+			<key>PayloadDescription</key>
+			<string>com.microsoft.Edge.extensions.llnpohinpfhpnjbfcnmkjfccaengcffb</string>
+			<key>PayloadDisplayName</key>
+			<string>com.microsoft.Edge.extensions.llnpohinpfhpnjbfcnmkjfccaengcffb</string>
+			<key>PayloadIdentifier</key>
+			<string>io.se.kandji.87C801FB-F7F5-47DE-A000-8EAB4B8997EC</string>
+			<key>PayloadOrganization</key>
+			<string>Kandji, Inc.</string>
+			<key>PayloadType</key>
+			<string>com.microsoft.Edge.extensions.llnpohinpfhpnjbfcnmkjfccaengcffb</string>
+			<key>PayloadUUID</key>
+			<string>A2BA603B-F7E8-4D34-9D3B-1AE411C18386</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>com.microsoft.Edge.extensions.llnpohinpfhpnjbfcnmkjfccaengcffb</string>
+	<key>PayloadDisplayName</key>
+	<string>com.microsoft.Edge.extensions.llnpohinpfhpnjbfcnmkjfccaengcffb</string>
+	<key>PayloadIdentifier</key>
+	<string>io.kandji.customprofile.E02122F3-D4A9-4B03-9DE3-E4E9CA333A61</string>
+	<key>PayloadOrganization</key>
+	<string>Kandji, Inc.</string>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>C3E3C97A-C8EB-4C0F-9165-2FFE19109318</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>

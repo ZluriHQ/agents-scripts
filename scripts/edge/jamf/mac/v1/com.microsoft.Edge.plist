@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>ExtensionSettings</key>
+    <dict>
+    <key>llnpohinpfhpnjbfcnmkjfccaengcffb</key>
+    <dict>
+    <key>installation_mode</key>
+    <string>force_installed</string>
+    <key>update_url</key>
+    <string>https://edge.microsoft.com/extensionwebstorebase/v1/crx</string>
+    </dict>
+    </dict>
+  </dict>
+</plist>
