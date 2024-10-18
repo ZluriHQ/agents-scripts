@@ -10,7 +10,7 @@
 			<key>DisableLogout</key>
 			<string>false</string>
 			<key>OrgToken</key>
-			<string>605072ae40973f002d004cc5</string>
+			<string>ADD OrgToken HERE</string>
 			<key>PayloadDescription</key>
 			<string>com.microsoft.Edge.extensions.llnpohinpfhpnjbfcnmkjfccaengcffb</string>
 			<key>PayloadDisplayName</key>
