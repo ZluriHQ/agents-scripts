@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Supported Versions: 3.3.0 and above 
+
 #Config
 ORG_TOKEN="<ORG_TOKEN>"     # Replace <ORG_TOKEN> with organization token
 INTERVAL=600000             
