@@ -1,12 +1,18 @@
-<key>EnterprisePoliciesEnabled</key>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  	<dict>
+    <key>EnterprisePoliciesEnabled</key>
 	<true/>
 	<key>ExtensionSettings</key>
-	<dict>
-		<key>zluribrowseragent@zluri.com</key>
 		<dict>
-			<key>installation_mode</key>
-			<string>force_installed</string>
-			<key>install_url</key>
-			<string>https://addons.mozilla.org/firefox/downloads/file/4241546/zluri_web_extension_firefox-2.3.3.xpi</string>
+			<key>zluribrowseragent@zluri.com</key>
+			<dict>
+				<key>installation_mode</key>
+				<string>force_installed</string>
+				<key>install_url</key>
+				<string>https://addons.mozilla.org/firefox/downloads/file/4241546/zluri_web_extension_firefox-2.3.3.xpi</string>
+			</dict>
 		</dict>
-</dict>
+  	</dict>
+</plist>
