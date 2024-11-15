@@ -64,6 +64,8 @@ if [ -z "$current_user" ]; then
     exit 1
 fi
 echo "Current logged-in user: $current_user"
+HOMEDIR=$(/usr/bin/dscl . -read /Users/"$current_user" NFSHomeDirectory | /usr/bin/cut -d' ' -f2)
+
 
 # Function to download and install Zluri agent
 download_install_agent(){
@@ -75,24 +77,25 @@ download_install_agent(){
 
 # Check if zluri app exists and compare versions
 if [ -e "$ZLURI_APP" ]; then
-    echo "zluri app found in /Applications/"
-    echo "$shouldUpdate before perf_comparision"
-    perf_comparison
-    echo "$shouldUpdate after perf_comparision"
-    if [ $shouldUpdate -eq 1 ]; then
-        echo "Update needed, updating zluri app..."
-        # If update is needed, remove old version and install the new one
-        echo "killing and removing existing zluri app..."
-        pkill -f "zluri"
-        rm -rf "$ZLURI_APP"
-        echo "Download new zluri app..."
-        download_install_agent
-    else
-        echo "No update needed."
-    fi
+   echo "zluri app found in /Applications/"
+   echo "$shouldUpdate before perf_comparision"
+   perf_comparison
+   echo "$shouldUpdate after perf_comparision"
+   if [ $shouldUpdate -eq 1 ]; then
+       echo "Update needed, updating zluri app..."
+       # If update is needed, remove old version and install the new one
+       echo "killing and removing existing zluri app..."
+       pkill -f "zluri"
+       pkill -x "osquery"
+       rm -rf "$ZLURI_APP"
+       echo "Download new zluri app..."
+       download_install_agent
+   else
+       echo "No update needed."
+   fi
 else
-    echo "zluri app not found, installing..."
-    download_install_agent
+   echo "zluri app not found, installing..."
+   download_install_agent
 fi
 
 # Create the necessary directories and write the config file
@@ -100,42 +103,50 @@ if [ ! -d "$TMP_CONFIG_DIR" ]; then
     mkdir -p $TMP_CONFIG_DIR
 fi
 
-if [ ! -d "$ZLURI_DIR" ]; then
-    mkdir -p $ZLURI_DIR
-fi
-
 # Write the config file to the tmp dir
 echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"$SILENT_AUTH\", \"local_server\": \"$LOCAL_SERVER\"}" > "$TMP_CONFIG_FILE"
 echo "Written config file to "$TMP_CONFIG_FILE""
-
-# Write the config file to the user's Application Support dir
-echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"$SILENT_AUTH\", \"local_server\": \"$LOCAL_SERVER\"}" > "$CONFIG_FILE"
-echo "Written config file to $CONFIG_FILE"
 
 # Ensure the correct user permissions on zluri.app
 sudo chown -R "$current_user":staff /Applications/zluri.app
 
 # Check if zluri and osquery are running, and start if not
 ZLURI_PROCESS=$(pgrep -f zluri | wc -l)
-OSQUERY_PROCESS=$(pgrep -f osquery | wc -l)
-
 echo "ZLURI_PROCESS count: $ZLURI_PROCESS"
+
+OSQUERY_PROCESS=$(pgrep -f osquery | wc -l)
 echo "OSQUERY_PROCESS count: $OSQUERY_PROCESS"
 
+
 if [[ $ZLURI_PROCESS -eq 0 ]] && [[ $OSQUERY_PROCESS -eq 0 ]]; then
-    echo "zluri app not running, attempting to start it..."
-    su -l "$current_user" -c 'open /Applications/zluri.app'
-    if [ $? -ne 0 ]; then
-        echo "Failed to open zluri.app, checking logs for more details..."
-        log show --predicate 'eventMessage contains "zluri.app"' --info --last 30m
-        exit 1
-    fi
+   echo "zluri app not running, attempting to start it..."
+   su -l "$current_user" -c 'open /Applications/zluri.app'
+   if [ $? -ne 0 ]; then
+       echo "Failed to open zluri.app, checking logs for more details..."
+       log show --predicate 'eventMessage contains "zluri.app"' --info --last 30m
+       exit 1
+   fi
 else
-    echo "zluri is already running."
+   echo "zluri is already running."
 fi
+
 
 # Remove the temp file pkg from users machine
 rm -rf "$TMP_ZLURI_FILE"
+
+#Wait for 100seconds for the zluri app to install 
+echo "sleep start"
+echo "$(date)"
+sleep 100
+echo "$(date)"
+echo "sleep end"
+
+if [ -d "$HOMEDIR/Library/Application Support/zluri" ]; then
+# Write the config file to the user's Application Support dir
+echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"$SILENT_AUTH\", \"local_server\": \"$LOCAL_SERVER\"}" > "$HOMEDIR/Library/Application Support/zluri/client-config.json"
+echo "Written config file to $HOMEDIR/Library/Application Support/zluri/client-config.json"
+else echo "Zluri folder doesn't exist yet"
+fi
 
 # End
 echo "All tasks completed successfully."
