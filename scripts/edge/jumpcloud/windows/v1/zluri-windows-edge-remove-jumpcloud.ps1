@@ -31,13 +31,13 @@ do {
     }
 } until ($noMore -eq 1)
 
-$extensionCheck = $extensionsList | Where-Object { $_.Value -eq $edgeRegistryEntry }
+$isExtensionPresent = $extensionsList | Where-Object { $_.Value -eq $edgeRegistryEntry }
 
-if ($extensionCheck) {
+if ($isExtensionPresent) {
     # Attempt to remove the extension if found
     Write-Output "Removing Zluri extension"
     try {
-        Remove-ItemProperty $regKey -Name $extensionCheck.Name -Force
+        Remove-ItemProperty $regKey -Name $isExtensionPresent.Name -Force
         return 0  # Successfully removed
     } catch {
         Write-Output "Failed to remove the Zluri extension"
