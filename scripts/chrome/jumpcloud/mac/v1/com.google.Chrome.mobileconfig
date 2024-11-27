@@ -5,34 +5,38 @@
 	<key>PayloadContent</key>
 	<array>
 		<dict>
-			<key>DisableLogout</key>
-			<string>true</string>
-			<key>AgentOpenLoginTab</key>
-			<string>true</string>
-			<key>OrgToken</key>
-			<string><ORGTOKEN></string>
+			<key>ExtensionSettings</key>
+			<dict>
+				<key>cmobkdiplndgpjodaioofofmcikimbdb</key>
+				<dict>
+					<key>installation_mode</key>
+					<string>force_installed</string>
+					<key>update_url</key>
+					<string>https://clients2.google.com/service/update2/crx</string>
+				</dict>
+			</dict>
 			<key>PayloadDescription</key>
-			<string>com.google.Chrome.extensions.cmobkdiplndgpjodaioofofmcikimbdb</string>
+			<string>com.google.Chrome</string>
 			<key>PayloadDisplayName</key>
-			<string>com.google.Chrome.extensions.cmobkdiplndgpjodaioofofmcikimbdb</string>
+			<string>com.google.Chrome</string>
 			<key>PayloadIdentifier</key>
-			<string>io.se.kandji.01F98679-C794-4229-8A53-F0E96D2DBD8E</string>
+			<string>io.se.kandji.B1F4414B-E6EC-43BA-8894-8885693FE856</string>
 			<key>PayloadOrganization</key>
 			<string>Kandji, Inc.</string>
 			<key>PayloadType</key>
-			<string>com.google.Chrome.extensions.cmobkdiplndgpjodaioofofmcikimbdb</string>
+			<string>com.google.Chrome</string>
 			<key>PayloadUUID</key>
-			<string>D82707B4-0B93-4F8D-9CCA-D34AE693DCB3</string>
+			<string>6738811D-67CA-4425-B92E-BB9AA2352065</string>
 			<key>PayloadVersion</key>
 			<integer>1</integer>
 		</dict>
 	</array>
 	<key>PayloadDescription</key>
-	<string>com.google.Chrome.extensions.cmobkdiplndgpjodaioofofmcikimbdb</string>
+	<string>com.google.Chrome</string>
 	<key>PayloadDisplayName</key>
-	<string>com.google.Chrome.extensions.cmobkdiplndgpjodaioofofmcikimbdb</string>
+	<string>com.google.Chrome</string>
 	<key>PayloadIdentifier</key>
-	<string>io.kandji.customprofile.CECE4888-783A-4FDD-B9CB-39BD1C55C2F0</string>
+	<string>io.kandji.customprofile.7D0F6DE9-68E9-409A-AD5F-CF183CA976B3</string>
 	<key>PayloadOrganization</key>
 	<string>Kandji, Inc.</string>
 	<key>PayloadScope</key>
@@ -40,7 +44,7 @@
 	<key>PayloadType</key>
 	<string>Configuration</string>
 	<key>PayloadUUID</key>
-	<string>BA780F02-799E-4535-80CB-14893F6BDC5C</string>
+	<string>0BF74D20-BD73-4BC2-B6EC-AA5EEC9645D8</string>
 	<key>PayloadVersion</key>
 	<integer>1</integer>
 </dict>
