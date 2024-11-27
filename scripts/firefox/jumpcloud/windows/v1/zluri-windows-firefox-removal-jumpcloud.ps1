@@ -25,11 +25,22 @@ if (Test-Path $profilesPath) {
             $extensionFiles = Get-ChildItem -Path $extensionsPath -File
 
             foreach ($file in $extensionFiles) {
-                if ($file.Name -like "*zluribrowseragent@zluri.com*") {
+                if ($file.Name -like "*zluribrowseragent@zluri.com.xpi*") {
                     Write-Output "Removing extension $($file.FullName) from profile $($profile.Name)"
-                    Remove-Item -Path $file.FullName -Force -ErrorAction SilentlyContinue
-                    if (Test-Path $file.FullName) {
-                        Write-Output "Failed to remove extension $($file.FullName)"
+                    
+                    try {
+                        # Attempt to remove the file
+                        Remove-Item -Path $file.FullName -Force -ErrorAction Stop
+                        # Verify if the file still exists
+                        if (Test-Path $file.FullName) {
+                            Write-Output "Failed to remove extension $($file.FullName) - File still exists."
+                            $removalSuccess = $false
+                        } else {
+                            Write-Output "Successfully removed extension $($file.FullName)"
+                        }
+                    } catch {
+                        # Log the error details if removal fails
+                        Write-Output "Failed to remove extension $($file.FullName). Error: $($_.Exception.Message)"
                         $removalSuccess = $false
                     }
                 }
