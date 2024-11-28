@@ -5,6 +5,7 @@ $fireFoxPathJson = Get-Content -Raw "C:\Program Files\Mozilla Firefox\distributi
 if ($fireFoxPathJson.policies.ExtensionSettings.PSObject.Properties.Name -contains "zluribrowseragent@zluri.com") {
     Write-Output "Removing Zluri Firefox extension from policies.json"
     Remove-Item "C:\Program Files\Mozilla Firefox\distribution\policies.json" -Force -ErrorAction SilentlyContinue
+
     if (Test-Path "C:\Program Files\Mozilla Firefox\distribution\policies.json") {
         Write-Output "Failed to remove policies.json"
         $removalSuccess = $false
@@ -27,10 +28,28 @@ if (Test-Path $profilesPath) {
             foreach ($file in $extensionFiles) {
                 if ($file.Name -like "*zluribrowseragent@zluri.com.xpi*") {
                     Write-Output "Removing extension $($file.FullName) from profile $($profile.Name)"
-                    
+
                     try {
-                        # Attempt to remove the file
+                        # Check if Firefox is running
+                        $firefoxProcess = Get-Process -Name firefox -ErrorAction SilentlyContinue
+                        if ($firefoxProcess) {
+                            Write-Output "Firefox is currently running. Terminating Firefox processes..."
+                            try {
+                                # Stop all Firefox processes
+                                Stop-Process -Name firefox -Force -ErrorAction Stop
+                                Write-Output "Successfully terminated all Firefox processes."
+                            } catch {
+                                Write-Output "Failed to terminate Firefox processes. Error: $($_.Exception.Message)"
+                                $removalSuccess = $false
+                                return 1
+                            }
+                        } else {
+                            Write-Output "No active Firefox processes found."
+                        }
+
+                        # Attempt to remove the extension file
                         Remove-Item -Path $file.FullName -Force -ErrorAction Stop
+
                         # Verify if the file still exists
                         if (Test-Path $file.FullName) {
                             Write-Output "Failed to remove extension $($file.FullName) - File still exists."
