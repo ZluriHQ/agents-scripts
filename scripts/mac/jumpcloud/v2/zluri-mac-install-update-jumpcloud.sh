@@ -69,10 +69,15 @@ HOMEDIR=$(/usr/bin/dscl . -read /Users/"$current_user" NFSHomeDirectory | /usr/b
 
 # Function to download and install Zluri agent
 download_install_agent(){
+    echo "DEBUG: Downloading"
     curl -o "$TMP_ZLURI_FILE" "$ZLURI_PKG_URL"
+    echo "DEBUG: Zluri appDownloaded"
     sudo chown -R "$current_user":staff "$TMP_ZLURI_FILE"
+    echo "DEBUG: Permission granted for tmp file"
     /usr/sbin/installer -pkg "$TMP_ZLURI_FILE" -target /Applications
+    echo "DEBUG: Zluri app installed"
     sudo chown -R "$current_user":staff /Applications/zluri.app
+    echo "DEBUG: Owning successful the zluri.app"
 }
 
 # Check if zluri app exists and compare versions
@@ -96,6 +101,7 @@ if [ -e "$ZLURI_APP" ]; then
 else
    echo "zluri app not found, installing..."
    download_install_agent
+   echo "DEBUG: Exited function"
 fi
 
 # Create the necessary directories and write the config file
