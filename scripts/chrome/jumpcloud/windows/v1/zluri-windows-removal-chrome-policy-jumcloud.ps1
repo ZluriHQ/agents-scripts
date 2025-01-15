@@ -1,4 +1,4 @@
-$registryPath = "HKLM:\SOFTWARE\Policies\Google\Chrome\ExtensionInstallForceList"
+$registryPath = "HKLM:\SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist"
 
 $extensionID = "cmobkdiplndgpjodaioofofmcikimbdb"
 $updateURL = "https://clients2.google.com/service/update2/crx"

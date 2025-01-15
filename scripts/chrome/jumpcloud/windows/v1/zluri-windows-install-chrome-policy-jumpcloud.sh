@@ -1,4 +1,4 @@
-$registryPathChrome = "HKLM:\SOFTWARE\Policies\Google\Chrome\ExtensionInstallForceList"
+$registryPathChrome = "HKLM:\SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist"
 $registry_path_chrome_policy = "HKLM:\Software\Policies\Google\Chrome\3rdparty\extensions\cmobkdiplndgpjodaioofofmcikimbdb\policy"
 
 
