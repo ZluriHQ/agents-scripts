@@ -26,18 +26,20 @@ if (Test-Path $registryPath) {
 }
 
 
-$registry_path_chrome_policy = "HKLM:\Software\Policies\Google\Chrome\3rdparty\extensions\cmobkdiplndgpjodaioofofmcikimbdb\policy"
+$registry_path_extension = "HKLM:\Software\Policies\Google\Chrome\3rdparty\extensions\cmobkdiplndgpjodaioofofmcikimbdb"
 
-
-if (Test-Path $registry_path_chrome_policy) {
-    Write-Host "Registry path $registry_path_chrome_policy exists. Proceeding with removal."
+# Check if the registry path exists
+if (Test-Path $registry_path_extension) {
+    Write-Host "Registry path $registry_path_extension exists. Proceeding with removal."
 
     try {
-        Remove-ItemProperty -Path $registry_path_chrome_policy -Name "OrgToken" -Value "<ORGTOKEN>" -Force
-        Remove-ItemProperty -Path $registry_path_chrome_policy -Name "AgentOpenLoginTab" -Value "true" -Force
-        Remove-ItemProperty -Path $registry_path_chrome_policy -Name "DisableLogout" -Value "true" -Force
-        Write-Host "Successfully removed 'Zluri Properties' from $registry_path_chrome_policy."
+        # Remove the entire registry key
+        Remove-Item -Path $registry_path_extension -Recurse -Force
+        Write-Host "Successfully removed the registry path: $registry_path_extension."
     } catch {
-        Write-Warning "Failed to remove 'Zluri Properties' from $registry_path_chrome_policy. Error: $_"
+        Write-Warning "Failed to remove the registry path $registry_path_extension. Error: $_"
     }
+} else {
+    Write-Host "Registry path $registry_path_extension does not exist. No action needed."
 }
+
