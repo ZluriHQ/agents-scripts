@@ -126,11 +126,7 @@ echo "$CONFIG_CONTENT" > "$TMP_CONFIG_FILE" || {
 # Set proper permissions
 sudo chown -R "$current_user" "$ZLURI_DIR" "$TMP_CONFIG_DIR"
 sudo chmod 755 "$ZLURI_DIR" "$TMP_CONFIG_DIR"
-sudo chmod 644 "$CONFIG_FILE" "$TMP_CONFIG_FILE"
-
-
-
-
+sudo chmod 755 "$CONFIG_FILE" "$TMP_CONFIG_FILE"
 
 
 # Ensure the correct user permissions on zluri.app
