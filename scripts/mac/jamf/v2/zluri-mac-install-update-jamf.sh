@@ -15,8 +15,8 @@ ZLURI_PKG_URL="https://zluri-prod-agent-builds.s3.us-west-2.amazonaws.com/zluri-
 
 #Paths
 ZLURI_APP="/Applications/zluri.app"                 # Path of the Zluri app
-ZLURI_DIR="$HOME/Library/Application Support/zluri" # Path to contents of the Zluri app
-CONFIG_FILE="$ZLURI_DIR/client-config.json"         # Path to add client-config file
+ZLURI_DIR="${HOME}/Library/Application Support/zluri" # Path to contents of the Zluri app
+CONFIG_FILE="${ZLURI_DIR}/client-config.json"         # Path to add client-config file
 TMP_CONFIG_DIR="/tmp/zluritemp"                     # Path for tmp config
 TMP_CONFIG_FILE="/tmp/zluritemp/client-config.json" # Path to add client-config file in tmp
 TMP_ZLURI_FILE="/tmp/zluri-agent.pkg"               # Temp path to add client-config file
@@ -95,22 +95,43 @@ else
     download_install_agent
 fi
 
-# Create the necessary directories and write the config file
 if [ ! -d "$TMP_CONFIG_DIR" ]; then
-    mkdir -p $TMP_CONFIG_DIR
+    mkdir -p "$TMP_CONFIG_DIR" || {
+        echo "Error: Failed to create temp directory"
+        exit 1
+    }
 fi
 
 if [ ! -d "$ZLURI_DIR" ]; then
-    mkdir -p $ZLURI_DIR
+    mkdir -p "$ZLURI_DIR" || {
+        echo "Error: Failed to create Zluri directory"
+        exit 1
+    }
 fi
 
-# Write the config file to the tmp dir
-echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"$SILENT_AUTH\", \"local_server\": \"$LOCAL_SERVER\"}" > "$TMP_CONFIG_FILE"
-echo "Written config file to "$TMP_CONFIG_FILE""
+# Create JSON config content
+CONFIG_CONTENT="{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"$SILENT_AUTH\", \"local_server\": \"$LOCAL_SERVER\"}"
 
-# Write the config file to the user's Application Support dir
-echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"$SILENT_AUTH\", \"local_server\": \"$LOCAL_SERVER\"}" > "$CONFIG_FILE"
-echo "Written config file to $CONFIG_FILE"
+# Write to main config file
+echo "$CONFIG_CONTENT" > "$CONFIG_FILE" || {
+    echo "Error: Failed to write main config file"
+    exit 1
+}
+
+echo "$CONFIG_CONTENT" > "$TMP_CONFIG_FILE" || {
+    echo "Error: Failed to write temp config file"
+    exit 1
+}
+
+# Set proper permissions
+sudo chown -R "$current_user" "$ZLURI_DIR" "$TMP_CONFIG_DIR"
+sudo chmod 755 "$ZLURI_DIR" "$TMP_CONFIG_DIR"
+sudo chmod 644 "$CONFIG_FILE" "$TMP_CONFIG_FILE"
+
+
+
+
+
 
 # Ensure the correct user permissions on zluri.app
 sudo chown -R "$current_user":staff /Applications/zluri.app
