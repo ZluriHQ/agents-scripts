@@ -119,7 +119,7 @@ write_config_files() {
     # Set permissions
     sudo chown -R "$current_user":staff "$ZLURI_DIR" "$USER_ZLURI_DIR"
     chmod 755 "$ZLURI_DIR" "$USER_ZLURI_DIR"
-    chmod 644 "$CONFIG_FILE" "$USER_CONFIG_FILE"
+    chmod 755 "$CONFIG_FILE" "$USER_CONFIG_FILE"
 
     # Verify files
     echo -e "\nVerifying config files..."
