@@ -86,6 +86,14 @@ write_config_files() {
         }
     fi
 
+    # Create temporary directory if it doesn't exist
+    if [ ! -d "$TMP_CONFIG_DIR" ]; then
+        mkdir -p "$TMP_CONFIG_DIR" || {
+            echo "Error: Failed to create temporary directory"
+            exit 1
+        }
+    fi
+
     # Create JSON config content
     CONFIG_CONTENT="{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"$SILENT_AUTH\", \"local_server\": \"$LOCAL_SERVER\"}"
 
@@ -99,6 +107,12 @@ write_config_files() {
     USER_CONFIG_FILE="$USER_ZLURI_DIR/client-config.json"
     echo "$CONFIG_CONTENT" > "$USER_CONFIG_FILE" || {
         echo "Error: Failed to write user-specific config file"
+        exit 1
+    }
+
+    # Write to temporary config
+    echo "$CONFIG_CONTENT" > "$TMP_CONFIG_FILE" || {
+        echo "Error: Failed to write temporary config file"
         exit 1
     }
 
