@@ -36,32 +36,14 @@ if ( -not (get-installedModule "RunAsUser" -ErrorAction SilentlyContinue)) {
 }
 
 $Command = {
-    # Check if running as administrator
-    if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Write-Error "This script must be run as an administrator."
-        exit 1
-    }
+    #Powershell Command Goes Here.
+    $msiPath="C:\Users\Public\Downloads\zluriWindowsAgent.msi"
+    echo $msiPath;
 
-    $msiPath = "C:\Users\Public\Downloads\zluriWindowsAgent.msi"
-
-    if (-not (Test-Path $msiPath)) {
-        Write-Error "MSI file not found at path: $msiPath"
-        exit 2
-    }
-
-    Write-Output "Installing $msiPath..."
-
-    $process = Start-Process "msiexec.exe" -ArgumentList "/i", "`"$msiPath`"", "/qn" -Wait -PassThru -NoNewWindow
-
-    if ($process.ExitCode -ne 0) {
-        Write-Error "Installation failed with exit code $($process.ExitCode)."
-        exit 3
-    } else {
-        Write-Output "Installation succeeded."
-    }
+    #install command
+    Start-Process "msiexec.exe" -ArgumentList "/I `"$msiPath`" /qn" -Wait
 }
 
-# To execute the script block, invoke it with &
-& $Command
+echo $Command;
 
 invoke-ascurrentuser -scriptblock $Command
