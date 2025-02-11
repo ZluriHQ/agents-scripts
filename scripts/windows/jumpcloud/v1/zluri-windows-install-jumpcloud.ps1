@@ -37,7 +37,7 @@ if ( -not (get-installedModule "RunAsUser" -ErrorAction SilentlyContinue)) {
 
 $Command = {
     #Powershell Command Goes Here.
-    $msiPath=$localPath
+    $msiPath="C:\Users\Public\Downloads\zluriWindowsAgent.msi"
     echo $msiPath;
 
     #install command
