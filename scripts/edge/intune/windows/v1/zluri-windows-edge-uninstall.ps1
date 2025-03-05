@@ -1,16 +1,15 @@
-# chrome extension install id
-$chromeExtensionID = "cmobkdiplndgpjodaioofofmcikimbdb"
-$chromeExtensionIDValue = "$chromeExtensionID;https://clients2.google.com/service/update2/crx"
+$edgeExtensionID = "cmobkdiplndgpjodaioofofmcikimbdb"
+$edgeExtensionIDValue = "$edgeExtensionID;https://clients2.google.com/service/update2/crx"
 
 
-# function to remove chrome and edge extension
+# function to remove edge and edge extension
 function zluriRemoveExtensions {
     Param([String]$extensionId, [String]$regKey)
     Write-Output $extensionID
     Write-Output $regKey
 
 
-    # Add Extension to Chrome
+    # Add Extension to edge
     $extensionsList = New-Object System.Collections.ArrayList
     $number = 0
     $noMore = 0
@@ -57,8 +56,8 @@ function Remove-Policy {
 }
 
 
-zluriRemoveExtensions -extensionId $chromeExtensionIDValue -regKey "HKLM:\SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist";
+zluriRemoveExtensions -extensionId $edgeExtensionIDValue -regKey "HKLM:\SOFTWARE\Policies\Google\edge\ExtensionInstallForcelist";
 
-Remove-Policy -regKey "HKLM:\SOFTWARE\Policies\Google\Chrome\3rdparty\extensions\$chromeExtensionID"
+Remove-Policy -regKey "HKLM:\SOFTWARE\Policies\\Microsoft\Edge\3rdparty\extensions\$edgeExtensionID"
 
 return "DONE"
