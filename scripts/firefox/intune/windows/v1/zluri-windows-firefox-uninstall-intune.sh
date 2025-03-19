@@ -14,7 +14,7 @@ if ($fireFoxPathJson.policies.ExtensionSettings.PSObject.Properties.Name -contai
     Write-Output "Zluri Firefox extension doesn't exist in policies.json"
 }
 
-$profilesPath = "C:\Users\TRACK\AppData\Roaming\Mozilla\Firefox\Profiles"
+$profilesPath = Join-Path $env:USERPROFILE "AppData\Roaming\Mozilla\Firefox\Profiles"
 
 if (Test-Path $profilesPath) {
     $profiles = Get-ChildItem -Path $profilesPath -Directory
