@@ -10,7 +10,7 @@
 			<key>AgentOpenLoginTab</key>
 			<string>true</string>
 			<key>OrgToken</key>
-			<string>605072ae40973f002d004cc5</string>
+			<string><ORGTOKEN></string>
 			<key>PayloadDescription</key>
 			<string>com.google.Chrome.extensions.cmobkdiplndgpjodaioofofmcikimbdb</string>
 			<key>PayloadDisplayName</key>
