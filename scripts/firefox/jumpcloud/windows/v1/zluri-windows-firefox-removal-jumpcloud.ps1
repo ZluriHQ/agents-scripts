@@ -38,6 +38,7 @@ if (Test-Path $profilesPath) {
                                 # Stop all Firefox processes
                                 Stop-Process -Name firefox -Force -ErrorAction Stop
                                 Write-Output "Successfully terminated all Firefox processes."
+                                Start-Sleep -Seconds 1
                             } catch {
                                 Write-Output "Failed to terminate Firefox processes. Error: $($_.Exception.Message)"
                                 $removalSuccess = $false
