@@ -1,10 +1,10 @@
 #!/bin/bash
 ORG_TOKEN=<orgToken>   # admin should update the ORG_TOKEN found in Zluri > Sources > Desktop agents page
-expectedVersion="3.6.3" # admin should update the expectedVersion value to the latest version available
+expectedVersion="4.0.0" # admin should update the expectedVersion value to the latest version available
 INTERVAL=600000         
 SCREEN_RECORD=off       # Setting this flag to on will require screen record permission. NOTE: ZLURI WILL NOT RECORD SCREEN
 LOCAL_SERVER=on         # Setting this flag on will start a server which helps in cross authenticating zluri browser extension
-ZluriPackageLink="https://zluri-agents-intenal-s3.s3.us-west-2.amazonaws.com/zluri-3.6.3.pkg"   ## Add the expected zluri package link to install here
+ZluriPackageLink="https://zluri-prod-agent-builds.s3.us-west-2.amazonaws.com/zluri-4.0.0.pkg"   ## Add the expected zluri package link to install here
 
 CURRENT_USER=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ && ! /loginwindow/ { print $3 }' ) 
 HOMEDIR=$(/usr/bin/dscl . -read /Users/"$CURRENT_USER" NFSHomeDirectory | /usr/bin/cut -d' ' -f2)
