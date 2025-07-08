@@ -5,10 +5,30 @@ ORG_TOKEN=<ENTER YOUR ORG TOKEN HERE PLEASE!!!!>
 INTERVAL=600000
 SCREEN_RECORD=off
 LOCAL_SERVER=on
+HIDE_ZLURI_TRAY_ICON=false
+expectedVersion="4.0.0"
+
+ZLURIDIR="$HOMEDIR/Library/Application Support/zluri"
+
+echo "ZLURIDIR: $ZLURIDIR"
 echo "$ORG_TOKEN"
 echo "$CURRENT_USER"
 echo "$HOMEDIR"
 echo "$LOCAL_SERVER"
+
+CONFIG_JSON=$(cat <<EOF
+{
+  "org_token": "$ORG_TOKEN",
+  "interval": "$INTERVAL",
+  "screen_recording": "$SCREEN_RECORD",
+  "silent_auth": "on",
+  "local_server": "$LOCAL_SERVER",
+  "hide_zluri_tray_icon": $HIDE_ZLURI_TRAY_ICON
+}
+EOF
+)
+
+echo "$CONFIG_JSON"
 
 echo "writing zluri generic-MDM config file"
 
@@ -17,11 +37,11 @@ if [ ! -d /tmp/zluritemp ]; then
 else
     echo "zluritemp dir exists"
 fi
-echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"on\", \"local_server\": \"$LOCAL_SERVER\"}" > /tmp/zluritemp/client-config.json
+echo "$CONFIG_JSON" > /tmp/zluritemp/client-config.json
 echo "====written the client config json file required configurations in temp directory===="
 
 echo "====will attemp to update the contents of config json file===="
-echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"on\", \"local_server\": \"$LOCAL_SERVER\"}" > "$ZLURIDIR"/client-config.json
+echo "$CONFIG_JSON" > "$ZLURIDIR"/client-config.json
 
 
 processor_brand=$(/usr/sbin/sysctl -n machdep.cpu.brand_string)
@@ -45,12 +65,8 @@ fi
 
 sleep 300
 
-ZLURIDIR="$HOMEDIR/Library/Application Support/zluri"
-
-echo "ZLURIDIR: $ZLURIDIR"
-
 if [ -d "$ZLURIDIR" ]; then
-    echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"on\", \"local_server\": \"$LOCAL_SERVER\"}" > "$ZLURIDIR"/client-config.json
+    echo "$CONFIG_JSON" > "$ZLURIDIR"/client-config.json
     echo "===writing config json file to appData directory==="
     else
       echo "zluri folder doesn't exist, cannot write config json file"
@@ -61,7 +77,7 @@ function version_compare { printf "%03d%03d%03d%03d" $(echo "$1" | tr '.' ' '); 
 function perf_comparison {
 installedVersion=$(defaults read /Applications/zluri.app/Contents/Info.plist CFBundleShortVersionString)
 echo "installed zluri app version: $installedVersion"
-expectedVersion="3.3.0"
+echo "expectedVersion: $expectedVersion"
 [ $(version_compare $installedVersion) -lt $(version_compare $expectedVersion) ] && echo "1"
 [[ $(version_compare $installedVersion) -gt $(version_compare $expectedVersion) || $(version_compare $installedVersion) -eq $(version_compare $expectedVersion) ]] && echo "0"
 }

@@ -4,6 +4,7 @@ expectedVersion="4.0.0" # admin should update the expectedVersion value to the l
 INTERVAL=600000         
 SCREEN_RECORD=off       # Setting this flag to on will require screen record permission. NOTE: ZLURI WILL NOT RECORD SCREEN
 LOCAL_SERVER=on         # Setting this flag on will start a server which helps in cross authenticating zluri browser extension
+HIDE_ZLURI_TRAY_ICON=false # Setting this flag will not show the zluri icon on the status bar above
 ZluriPackageLink="https://zluri-prod-agent-builds.s3.us-west-2.amazonaws.com/zluri-4.0.0.pkg"   ## Add the expected zluri package link to install here
 
 CURRENT_USER=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ && ! /loginwindow/ { print $3 }' ) 
@@ -13,6 +14,21 @@ echo "$ORG_TOKEN"
 echo "$CURRENT_USER"
 echo "$HOMEDIR"
 echo "$LOCAL_SERVER"
+
+
+CONFIG_JSON=$(cat <<EOF
+{
+  "org_token": "$ORG_TOKEN",
+  "interval": "$INTERVAL",
+  "screen_recording": "$SCREEN_RECORD",
+  "silent_auth": "on",
+  "local_server": "$LOCAL_SERVER",
+  "hide_zluri_tray_icon": $HIDE_ZLURI_TRAY_ICON
+}
+EOF
+)
+
+echo "$CONFIG_JSON"
 
 # version comparison logic
 function version_compare { printf "%03d%03d%03d%03d" $(echo "$1" | tr '.' ' '); }
@@ -42,11 +58,11 @@ function write_config() {
    else
      echo ""/tmp/zluritemp" dir exists"
    fi
-   echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"on\", \"local_server\": \"$LOCAL_SERVER\"}" > "/tmp/zluritemp"/client-config.json
+   echo "$CONFIG_JSON" > "/tmp/zluritemp"/client-config.json
    echo "====written the client config json file required configurations in temp directory===="
    ZLURIDIR="$HOMEDIR/Library/Application Support/zluri"
    if [ -d "$ZLURIDIR" ]; then
-   echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"on\", \"local_server\": \"$LOCAL_SERVER\"}" > "$ZLURIDIR"/client-config.json
+   echo "$CONFIG_JSON" > "$ZLURIDIR"/client-config.json
    echo "===writing config json file to appData directory==="
    else
      echo "zluri folder doesn't exist, cannot write config json file"

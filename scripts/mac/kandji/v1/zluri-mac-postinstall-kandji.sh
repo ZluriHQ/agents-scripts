@@ -6,6 +6,18 @@ INTERVAL=3000
 SCREEN_RECORD=off
 LOCAL_SERVER=on
 
+CONFIG_JSON=$(cat << EOF 
+{
+  "org_token": "$ORG_TOKEN",
+  "interval": "$INTERVAL",
+  "screen_recording": "$SCREEN_RECORD",
+  "silent_auth": "on",
+  "local_server": "$LOCAL_SERVER",
+  "hide_zluri_tray_icon": $HIDE_ZLURI_TRAY_ICON
+}
+EOF
+)
+
 
 # change ownership of zluri agent to current user, as MDM deploys and isntalls the app under root
 sudo chown -R ${CURRENT_USER}:wheel /Applications/zluri.app
@@ -29,7 +41,7 @@ echo "ZLURIDIR: $ZLURIDIR"
 
 
 if [ -d "$ZLURIDIR" ]; then
-   echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"on\", \"local_server\": \"$LOCAL_SERVER\"}" > "$ZLURIDIR"/client-config.json
+   echo "$CONFIG_JSON" > "$ZLURIDIR"/client-config.json
    echo "===writing config json file to appData directory==="
    else
      echo "zluri folder doesn't exist, cannot write config json file"

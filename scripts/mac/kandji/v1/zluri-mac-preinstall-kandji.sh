@@ -5,6 +5,20 @@ ORG_TOKEN=<orgToken> # needs to be added by the customer
 INTERVAL=600000 # check enrollment API in ms
 SCREEN_RECORD=off # screen recoding permission
 LOCAL_SERVER=on # node auth server, cross auth of DA & BA, as per the customer pref
+HIDE_ZLURI_TRAY_ICON=false  # Setting this flag will not show the zluri icon on the status bar above
+
+CONFIG_JSON=$(cat << EOF 
+{
+  "org_token": "$ORG_TOKEN",
+  "interval": "$INTERVAL",
+  "screen_recording": "$SCREEN_RECORD",
+  "silent_auth": "on",
+  "local_server": "$LOCAL_SERVER",
+  "hide_zluri_tray_icon": $HIDE_ZLURI_TRAY_ICON
+}
+EOF
+)
+
 echo "$ORG_TOKEN"
 echo "$CURRENT_USER"
 echo "$HOMEDIR"
@@ -16,7 +30,7 @@ if [ ! -d /tmp/zluritemp ]; then
 else
    echo "zluritemp dir exists"
 fi
-echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"on\", \"local_server\": \"$LOCAL_SERVER\"}" > /tmp/zluritemp/client-config.json
+echo "$CONFIG_JSON" > /tmp/zluritemp/client-config.json
 echo "====written the client config json file required configurations in temp directory===="
 
 
@@ -57,7 +71,7 @@ fi
 sudo mkdir -p $HOMEDIR/Library/Application\ Support/zluri
 
 
-echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"on\", \"local_server\": \"$LOCAL_SERVER\"}" > $HOMEDIR/Library/Application\ Support/zluri/client-config.json
+echo "$CONFIG_JSON" > $HOMEDIR/Library/Application\ Support/zluri/client-config.json
 echo "====written the client config json file required configurations in appData directory===="
 
 

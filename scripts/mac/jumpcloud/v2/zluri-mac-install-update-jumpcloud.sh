@@ -9,9 +9,24 @@ SCREEN_RECORD=off           # Turn this on if you want to see the option to enab
 SILENT_AUTH=on              # Turn this off if agent should up if authentication is not successful
 LOCAL_SERVER=on             # This is required when browser agent can authenticate with loggedin info from desktop agents
 EXPECTED_VERSION="4.0.0"    # Replace with the latest version
+HIDE_ZLURI_TRAY_ICON=false  # Setting this flag will not show the zluri icon on the status bar above
 ZLURI_PKG_URL="https://zluri-prod-agent-builds.s3.us-west-2.amazonaws.com/zluri-4.0.0.pkg"
 
 ################################################## DO NOT MAKE ANY MODIFICATION BELOW ##################################################
+
+CONFIG_JSON=$(cat << EOF
+{
+  "org_token": "$ORG_TOKEN",
+  "interval": "$INTERVAL",
+  "screen_recording": "$SCREEN_RECORD",
+  "silent_auth": "$SILENT_AUTH",
+  "local_server": "$LOCAL_SERVER",
+  "hide_zluri_tray_icon": $HIDE_ZLURI_TRAY_ICON
+}
+EOF
+)
+
+echo $CONFIG_JSON
 
 #Paths
 ZLURI_APP="/Applications/zluri.app"                 # Path of the Zluri app
@@ -104,7 +119,7 @@ if [ ! -d "$TMP_CONFIG_DIR" ]; then
 fi
 
 # Write the config file to the tmp dir
-echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"$SILENT_AUTH\", \"local_server\": \"$LOCAL_SERVER\"}" > "$TMP_CONFIG_FILE"
+echo "$CONFIG_JSON" > "$TMP_CONFIG_FILE"
 echo "Written config file to "$TMP_CONFIG_FILE""
 
 # Ensure the correct user permissions on zluri.app
@@ -143,7 +158,7 @@ echo "sleep end"
 
 if [ -d "$HOMEDIR/Library/Application Support/zluri" ]; then
 # Write the config file to the user's Application Support dir
-echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"$SILENT_AUTH\", \"local_server\": \"$LOCAL_SERVER\"}" > "$HOMEDIR/Library/Application Support/zluri/client-config.json"
+echo "$CONFIG_JSON" > "$HOMEDIR/Library/Application Support/zluri/client-config.json"
 echo "Written config file to $HOMEDIR/Library/Application Support/zluri/client-config.json"
 else echo "Zluri folder doesn't exist yet"
 fi

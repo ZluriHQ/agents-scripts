@@ -4,6 +4,7 @@ expectedVersion="4.0.0" # admin should update the expectedVersion value to the l
 INTERVAL=600000
 SCREEN_RECORD=off
 LOCAL_SERVER=on
+HIDE_ZLURI_TRAY_ICON=false 
 
 
 CURRENT_USER=$( echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ && ! /loginwindow/ { print $3 }' )
@@ -12,6 +13,19 @@ echo "$ORG_TOKEN"
 echo "$CURRENT_USER"
 echo "$HOMEDIR"
 echo "$LOCAL_SERVER"
+
+CONFIG_JSON=$(cat << EOF
+{
+  "org_token": "$ORG_TOKEN",
+  "interval": "$INTERVAL",
+  "screen_recording": "$SCREEN_RECORD",
+  "silent_auth": "on",
+  "local_server": "$LOCAL_SERVER",
+  "hide_zluri_tray_icon": $HIDE_ZLURI_TRAY_ICON
+}
+EOF
+)
+
 # version comparison logic
 function version_compare { printf "%03d%03d%03d%03d" $(echo "$1" | tr '.' ' '); }
 shouldUpdate=0 # whehter update required flag
@@ -73,11 +87,11 @@ if [[ $finalResult -eq 0 ]] || [[ $shouldUpdate -eq 0 ]]
    else
      echo "zluritemp dir exists"
    fi
-   echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"on\", \"local_server\": \"$LOCAL_SERVER\"}" > /tmp/zluritemp/client-config.json
+   echo "$CONFIG_JSON" > /tmp/zluritemp/client-config.json
    echo "====written the client config json file required configurations in temp directory===="
    ZLURIDIR="$HOMEDIR/Library/Application Support/zluri"
    if [ -d "$ZLURIDIR" ]; then
-   echo "{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"on\", \"local_server\": \"$LOCAL_SERVER\"}" > "$ZLURIDIR"/client-config.json
+   echo "$CONFIG_JSON" > "$ZLURIDIR"/client-config.json
    echo "===writing config json file to appData directory==="
    else
      echo "zluri folder doesn't exist, cannot write config json file"
