@@ -8,10 +8,26 @@ INTERVAL=600000
 SCREEN_RECORD=off           # Turn this on if you want to see the option to enable screen record
 SILENT_AUTH=on              # Turn this off if agent should up if authentication is not successful
 LOCAL_SERVER=on             # This is required when browser agent can authenticate with loggedin info from desktop agents
-EXPECTED_VERSION="3.6.3"    # Replace with the latest version
-ZLURI_PKG_URL="https://zluri-prod-agent-builds.s3.us-west-2.amazonaws.com/zluri-3.6.3.pkg"
+EXPECTED_VERSION="4.0.2"    # Replace with the latest version
+ZLURI_PKG_URL="https://zluri-prod-agent-builds.s3.us-west-2.amazonaws.com/zluri-4.0.2.pkg"
+HIDE_ZLURI_TRAY_ICON=false # Setting this flag will not show the zluri icon on the status bar above
 
 ################################################## DO NOT MAKE ANY MODIFICATION BELOW ##################################################
+
+CONFIG_CONTENT=$(cat <<EOF
+{
+  "org_token": "$ORG_TOKEN",
+  "interval": "$INTERVAL",
+  "screen_recording": "$SCREEN_RECORD",
+  "silent_auth": "$SILENT_AUTH",
+  "local_server": "$LOCAL_SERVER",
+  "hide_zluri_tray_icon": $HIDE_ZLURI_TRAY_ICON
+}
+EOF
+)
+
+echo $CONFIG_CONTENT
+
 
 #Paths
 ZLURI_APP="/Applications/zluri.app"                 # Path of the Zluri app
@@ -93,9 +109,6 @@ write_config_files() {
             exit 1
         }
     fi
-
-    # Create JSON config content
-    CONFIG_CONTENT="{\"org_token\": \"$ORG_TOKEN\", \"interval\": \"$INTERVAL\", \"screen_recording\": \"$SCREEN_RECORD\", \"silent_auth\": \"$SILENT_AUTH\", \"local_server\": \"$LOCAL_SERVER\"}"
 
     # Write to system-wide config
     echo "$CONFIG_CONTENT" > "$CONFIG_FILE" || {

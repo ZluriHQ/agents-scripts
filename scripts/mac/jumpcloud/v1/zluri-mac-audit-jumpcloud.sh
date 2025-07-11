@@ -7,7 +7,7 @@ function version_compare { printf "%03d%03d%03d%03d" $(echo "$1" | tr '.' ' '); 
 # perform version comparision
 function perf_comparison {
    installedVersion=$(defaults read /Applications/zluri.app/Contents/Info.plist CFBundleShortVersionString) # ask installed version of the app from system
-   expectedVersion="3.6.3" # admin should update the expectedVersion value to the latest version available
+   expectedVersion="4.0.2" # admin should update the expectedVersion value to the latest version available
    installedVersionComparison=$(version_compare $installedVersion)
    expectedVersionComparison=$(version_compare $expectedVersion)
 
@@ -57,7 +57,7 @@ if [[ $shouldUpdate -eq 1 ]] || [[ $finalResult -eq 1 ]]; then
  echo "attempting to remove zluri app"
  rm -rf /Applications/zluri.app
   # curl and usr/bin/installer
-  curl -o /tmp/zluri-agent.pkg "https://zluri-agents-intenal-s3.s3.us-west-2.amazonaws.com/zluri-3.6.3.pkg"
+  curl -o /tmp/zluri-agent.pkg "https://zluri-prod-agent-builds.s3.us-west-2.amazonaws.com/zluri-4.0.2.pkg"
   sudo chown -R ${CURRENT_USER}:staff /tmp/zluri-agent.pkg
   /usr/sbin/installer -pkg /tmp/zluri-agent.pkg -target /Applications
   sudo chown -R ${CURRENT_USER}:staff /Applications/zluri.app
