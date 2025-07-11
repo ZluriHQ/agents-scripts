@@ -6,7 +6,7 @@ INTERVAL=600000
 SCREEN_RECORD=off
 LOCAL_SERVER=on
 HIDE_ZLURI_TRAY_ICON=false
-expectedVersion="4.0.0"
+expectedVersion="4.0.2"
 
 ZLURIDIR="$HOMEDIR/Library/Application Support/zluri"
 

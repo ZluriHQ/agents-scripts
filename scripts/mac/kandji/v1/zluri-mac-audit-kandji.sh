@@ -1,6 +1,6 @@
 #!/bin/bash
 ORG_TOKEN=<orgToken>
-expectedVersion="4.0.0" # admin should update the expectedVersion value to the latest version available
+expectedVersion="4.0.2" # admin should update the expectedVersion value to the latest version available
 INTERVAL=600000
 SCREEN_RECORD=off
 LOCAL_SERVER=on

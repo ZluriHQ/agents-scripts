@@ -8,8 +8,8 @@ INTERVAL=600000
 SCREEN_RECORD=off           # Turn this on if you want to see the option to enable screen record
 SILENT_AUTH=on              # Turn this off if agent should up if authentication is not successful
 LOCAL_SERVER=on             # This is required when browser agent can authenticate with loggedin info from desktop agents
-EXPECTED_VERSION="4.0.0"    # Replace with the latest version
-ZLURI_PKG_URL="https://zluri-prod-agent-builds.s3.us-west-2.amazonaws.com/zluri-4.0.0.pkg"
+EXPECTED_VERSION="4.0.2"    # Replace with the latest version
+ZLURI_PKG_URL="https://zluri-prod-agent-builds.s3.us-west-2.amazonaws.com/zluri-4.0.2.pkg"
 HIDE_ZLURI_TRAY_ICON=false # Setting this flag will not show the zluri icon on the status bar above
 
 ################################################## DO NOT MAKE ANY MODIFICATION BELOW ##################################################
