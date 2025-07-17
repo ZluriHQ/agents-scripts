@@ -69,12 +69,20 @@ $zluriEntries = Find-ZluriEntries
 Log-Message "Found $($zluriEntries.Count) Zluri entry(ies)"
 
 foreach ($entry in $zluriEntries) {
-    $currentVersion = $entry.Version
-    Log-Message "Zluri Entry: $($entry.DisplayName), Version: $currentVersion"
+    
+    $currentVersionString = $entry.Version
+    Log-Message "Zluri Entry: $($entry.DisplayName), Version: $currentVersionString"
 
-    if ([version]$expectedVersion -gt [version]$currentVersion) {
-        # Log-Message "Version $currentVersion is older than expected $expectedVersion — proceeding to uninstall"
+    $parsedCurrentVersion = $null
+    if (-not $currentVersionString -or -not [version]::TryParse($currentVersionString, [ref]$parsedCurrentVersion)) {
+        Log-Message "Invalid or missing version string: '$currentVersionString'. Skipping this entry."
+        continue
+    }
 
+    $parsedExpectedVersion = [version]$expectedVersion  # assumed valid
+
+    if ($parsedExpectedVersion -gt $parsedCurrentVersion) {
+    
         try {
             $zluriProcess = Get-Process -Name "zluri" -ErrorAction SilentlyContinue
             if ($zluriProcess) {
