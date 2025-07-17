@@ -1,8 +1,8 @@
 #expected version. zluri apps lesser than this version will get uninstalled.
-$expectedVersion="3.3.0.0" # Update the minimum version that is expected to be present in the system
+$expectedVersion="4.0.0.0" # Update the minimum version that is expected to be present in the system
 
 #Values to insert into client-config.json file
-$configValues='{"org_token": "<orgToken>","interval": "3600000","local_server":"on"}' #Replace <orgToken> with valid valid orgToken
+$configValues='{"org_token": "<orgToken>","interval": "3600000","local_server":"on","silent_auth": "on", "hide_zluri_tray_icon": false}' #Replace <orgToken> with valid valid orgToken
 
 #########################################################################################
 
