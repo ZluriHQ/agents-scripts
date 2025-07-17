@@ -6,18 +6,19 @@ $configValues = '{"org_token": "<orgToken>","interval": "3600000","local_server"
 
 #########################################################################################
 
-    # Path for zluri script logs
-$logPathRoot=$env:programdata
-If (-not (Test-Path "$logPathRoot\zluri")) {
-        Log-Message "Creating zluri folder in $folderPath"
-        New-Item -Path "$logPathRoot\zluri" -ItemType "directory"
-    }
-
-    # Logger function
+# Logger function
 Function Log-Message([String]$Message)
 {
     Add-Content -Path "$logPathRoot\zluri\zluriscriptlog.txt" $Message
 }
+
+# Path for zluri script logs
+$logPathRoot=$env:programdata
+If (-not (Test-Path "$logPathRoot\zluri")) {
+        New-Item -Path "$logPathRoot\zluri" -ItemType "directory"
+    }
+
+
 
     # Specify the expected version in the same format
 $logDate=Get-date
