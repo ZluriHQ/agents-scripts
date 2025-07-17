@@ -81,6 +81,7 @@ foreach ($entry in $zluriEntries) {
 
     $parsedExpectedVersion = [version]$expectedVersion  
 
+    # TODO: Check cases like 4.0.0.0 vs 4.0.0.
     if ($parsedExpectedVersion -gt $parsedCurrentVersion) {
     
         try {
