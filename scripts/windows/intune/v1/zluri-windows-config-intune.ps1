@@ -89,13 +89,11 @@ foreach ($entry in $zluriEntries) {
                     else {
                         Log-Message "Unable to extract ProductCode from: $uninstallStr"
                     }
-
                 }
-                else {
+            } else {
                     Log-Message "Non-MSI uninstall string detected. Deleting registry entry: $($entry.KeyPath)"
                     Remove-Item -Path $entry.KeyPath -Force -Recurse -ErrorAction SilentlyContinue
                     Log-Message "Deleted registry key: $($entry.KeyPath)"
-                }
             }
 
             # Delete local folders and desktop shortcuts
