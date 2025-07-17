@@ -1,58 +1,120 @@
 #expected version. zluri apps lesser than this version will get uninstalled.
-$expectedVersion="3.3.0.0" # Update the minimum version that is expected to be present in the system
+$expectedVersion = "4.0.0.0" # Update the minimum version that is expected to be present in the system
 
 #Values to insert into client-config.json file
-$configValues='{"org_token": "<orgToken>","interval": "3600000","local_server":"on"}' #Replace <orgToken> with valid valid orgToken
+$configValues = '{"org_token": "<orgToken>","interval": "3600000","local_server":"on","silent_auth": "on", "hide_zluri_tray_icon": false}' #Replace <orgToken> with valid valid orgToken
 
 #########################################################################################
 
-    # Path for zluri script logs
-$logPathRoot=$env:programdata
-If (-not (Test-Path "$logPathRoot\zluri")) {
-        Log-Message "Creating zluri folder in $folderPath"
-        New-Item -Path "$logPathRoot\zluri" -ItemType "directory"
-    }
-
-    # Logger function
+# Logger function
 Function Log-Message([String]$Message)
 {
     Add-Content -Path "$logPathRoot\zluri\zluriscriptlog.txt" $Message
 }
 
+# Path for zluri script logs
+$logPathRoot=$env:programdata
+If (-not (Test-Path "$logPathRoot\zluri")) {
+        New-Item -Path "$logPathRoot\zluri" -ItemType "directory"
+    }
+
+
+
     # Specify the expected version in the same format
 $logDate=Get-date
 Log-Message "$logDate"
 
-    # Get the installed zluri apps
-$isZluriApp=Get-WmiObject -Class Win32_Product | where name -eq zluri
-Log-Message "$isZluriApp"
+# Function to find all Zluri versions and their uninstall info
+function Find-ZluriEntries {
+    $uninstallPaths = @(
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+        "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+    )
 
-    # For each zluri agent present in the system
-    foreach($zluriApp in $isZluriApp){
-        Log-Message "$zluriApp"
-        $currentVersion=$zluriApp.version
-            # Check if expected version is greater than the installed zluri version
-        if($expectedVersion -gt $currentVersion){
-            Log-Message "checking if $expectedVersion greater than $currentVersion"
-            $zluriProcess=Get-Process -Name "zluri"
-                # stopping all zluri process
-            Log-Message "$zluriProcess"
-            $nid = (Get-Process zluri).id
-                Stop-Process -Id $nid -Force
-                Wait-Process -Id $nid -ErrorAction SilentlyContinue
-                # Uninstalling zluri app
-            $zluriApp.uninstall() | Out-Null
-                # deleting zluri folder from %localappdata%\programs
-            Remove-Item C:\Users\$env:username\AppData\Local\Programs\zluri -Recurse -Force -ErrorAction silentlycontinue
-            Remove-Item C:\Users\$env:username\AppData\Roaming\zluri -Recurse -Force -ErrorAction silentlycontinue
-                # deleting the shortcut on desktop
-            $ShortcutsToDelete = Get-ChildItem -Path "C:\Users\$env:username\Desktop" -Filter "zluri.lnk"
-            $ShortcutsToDelete | ForEach-Object {
-                Remove-Item -Path $_.FullName
+    $entries = @()
+
+    foreach ($path in $uninstallPaths) {
+        if (Test-Path $path) {
+            Get-ChildItem $path | ForEach-Object {
+                $props = Get-ItemProperty -Path $_.PSPath -ErrorAction SilentlyContinue
+                if ($props.DisplayName -match 'zluri') {
+                    $entries += [PSCustomObject]@{
+                        DisplayName     = $props.DisplayName
+                        Version         = $props.DisplayVersion
+                        UninstallString = $props.UninstallString
+                        KeyPath         = $_.PSPath
+                    }
+                }
             }
-
         }
     }
+
+    return $entries
+}
+
+# Get all installed Zluri entries
+$zluriEntries = Find-ZluriEntries
+Log-Message "Found $($zluriEntries.Count) Zluri entry(ies)"
+
+foreach ($entry in $zluriEntries) {
+    $currentVersion = $entry.Version
+    Log-Message "Zluri Entry: $($entry.DisplayName), Version: $currentVersion"
+
+    if ([version]$expectedVersion -gt [version]$currentVersion) {
+        # Log-Message "Version $currentVersion is older than expected $expectedVersion — proceeding to uninstall"
+
+        try {
+            $zluriProcess = Get-Process -Name "zluri" -ErrorAction SilentlyContinue
+            if ($zluriProcess) {
+                $nid = $zluriProcess.Id
+                Stop-Process -Id $nid -Force
+                Wait-Process -Id $nid -ErrorAction SilentlyContinue
+                Log-Message "Stopped running Zluri process"
+            }
+
+            if ($entry.UninstallString) {
+                $uninstallStr = $entry.UninstallString
+
+                if ($uninstallStr -match "msiexec\.exe" -or $uninstallStr -match "msiexec") {
+                    # Extract the ProductCode from the uninstall string if it's in the format /X{GUID}
+            
+                    if ($uninstallStr -match "({[0-9A-Fa-f\-]+})") {
+                        $productCode = $matches[1]
+                        Log-Message "Extracted ProductCode: $productCode"
+
+                        $msiArgs = "/x $productCode /qn /norestart"
+                        Start-Process -FilePath "msiexec.exe" -ArgumentList $msiArgs -Wait
+                        Log-Message "Performed silent MSI uninstall"
+                    }
+                    else {
+                        Log-Message "Unable to extract ProductCode from: $uninstallStr"
+                    }
+                } else {
+                    Log-Message "Non-MSI uninstall string detected. Deleting registry entry: $($entry.KeyPath)"
+                    Remove-Item -Path $entry.KeyPath -Force -Recurse -ErrorAction SilentlyContinue
+                    Log-Message "Deleted registry key: $($entry.KeyPath)"
+               }
+            } 
+
+            # Delete local folders and desktop shortcuts
+            Remove-Item "C:\Users\$env:USERNAME\AppData\Local\Programs\zluri" -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item "C:\Users\$env:USERNAME\AppData\Roaming\zluri" -Recurse -Force -ErrorAction SilentlyContinue
+            Get-ChildItem "C:\Users\$env:USERNAME\Desktop" -Filter "zluri.lnk" | ForEach-Object {
+                Remove-Item -Path $_.FullName -Force -ErrorAction SilentlyContinue
+            }
+            Log-Message "Cleaned up folders and shortcuts"
+
+        }
+        catch {
+            Log-Message "Error during uninstall: $_"
+        }
+    }
+    else {
+        Log-Message "Version $currentVersion is up-to-date"
+    }
+}
+
 
 
 # function to create client-config.json file
