@@ -2,7 +2,18 @@
 $expectedVersion = "4.0.0.0" # Update the minimum version that is expected to be present in the system
 
 #Values to insert into client-config.json file
-$configValues = '{"org_token": "<orgToken>","interval": "3600000","local_server":"on","silent_auth": "on", "hide_zluri_tray_icon": false}' #Replace <orgToken> with valid valid orgToken
+$orgToken = "<your_actual_token>"
+
+$configValues = @"
+{
+  "org_token": "$orgToken",
+  "interval": "3600000",
+  "local_server": "on",
+  "silent_auth": "on",
+  "hide_zluri_tray_icon": false
+}
+"@
+
 
 #########################################################################################
 
