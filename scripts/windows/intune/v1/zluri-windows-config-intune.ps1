@@ -79,7 +79,7 @@ foreach ($entry in $zluriEntries) {
         continue
     }
 
-    $parsedExpectedVersion = [version]$expectedVersion  # assumed valid
+    $parsedExpectedVersion = [version]$expectedVersion  
 
     if ($parsedExpectedVersion -gt $parsedCurrentVersion) {
     
