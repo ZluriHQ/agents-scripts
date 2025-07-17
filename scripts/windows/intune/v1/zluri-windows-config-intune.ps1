@@ -130,7 +130,7 @@ foreach ($entry in $zluriEntries) {
         }
     }
     else {
-        Log-Message "Version $currentVersion is up-to-date"
+        Log-Message "Version $parsedCurrentVersion is up-to-date"
     }
 }
 
