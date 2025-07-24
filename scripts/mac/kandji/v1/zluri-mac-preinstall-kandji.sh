@@ -74,11 +74,5 @@ sudo mkdir -p $HOMEDIR/Library/Application\ Support/zluri
 echo "$CONFIG_JSON" > $HOMEDIR/Library/Application\ Support/zluri/client-config.json
 echo "====written the client config json file required configurations in appData directory===="
 
-echo "==== Killing the zluri process and starting it again ===="
-
-pkill -x zluri
-
-sleep 5
-open /Applications/zluri.app
 
 exit 0
