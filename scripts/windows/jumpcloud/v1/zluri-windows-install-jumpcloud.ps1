@@ -1,7 +1,7 @@
 # This script is installing Zluri for the current signed in user and usually takes around 4-5 minutes.
 
 # URL of the file to download
-$url = "https://zluri-prod-agent-builds.s3.us-west-2.amazonaws.com/zluri_prod_4.0.0.msi"
+$url = "https://zluri-prod-agent-builds.s3.us-west-2.amazonaws.com/zluri_prod_4.0.1.msi"
 
 # Local path to save the downloaded file
 $localPath = "C:\Users\Public\Downloads\zluriWindowsAgent.msi"
