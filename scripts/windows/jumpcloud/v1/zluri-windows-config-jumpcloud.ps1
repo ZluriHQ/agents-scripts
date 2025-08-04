@@ -12,7 +12,7 @@ if ( -not (get-installedModule "RunAsUser" -ErrorAction SilentlyContinue)) {
 }
 
 $Command = {
-$expectedVersion = "4.0.0.0" # Update the minimum version that is expected to be present in the system
+$expectedVersion = "4.0.1.0" # Update the minimum version that is expected to be present in the system
 $orgToken = "<orgToken>" # replace your org token here
 
 #Values to insert into client-config.json file
