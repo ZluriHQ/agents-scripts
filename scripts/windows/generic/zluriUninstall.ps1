@@ -25,6 +25,30 @@ foreach ($path in $uninstallPaths) {
     }
 }
 
+# Function to validate uninstall string format
+function Test-UninstallStringFormat {
+    param([string]$uninstallString)
+    
+    if ([string]::IsNullOrWhiteSpace($uninstallString)) {
+        return $false
+    }
+    
+    # Check if it matches expected patterns
+    $validPatterns = @(
+        '^"[^"]+\.exe"(\s+/.+)?$',           # "path\to\file.exe" optional_args
+        '^[^"]+\.exe(\s+/.+)?$',             # path\to\file.exe optional_args  
+        '.*msiexec\.exe.*/[xX]\s*\{[\w-]+\}' # MSI uninstall pattern
+    )
+    
+    foreach ($pattern in $validPatterns) {
+        if ($uninstallString -match $pattern) {
+            return $true
+        }
+    }
+    
+    return $false
+}
+
 # Execute uninstallers first (before removing registry entries)
 foreach ($uninstaller in $uninstallersToRemove) {
     $props = $uninstaller.Properties
@@ -34,8 +58,8 @@ foreach ($uninstaller in $uninstallersToRemove) {
         Write-Host "Attempting MSI uninstall for $($props.DisplayName)..."
         Start-Process -FilePath "msiexec.exe" -ArgumentList "/x $($matches[1]) /qn" -Wait -NoNewWindow -ErrorAction SilentlyContinue
     }
-    # Try EXE uninstall with multiple silent flags
-    elseif ($props.UninstallString) {
+    # Try EXE uninstall with validation
+    elseif ($props.UninstallString -and (Test-UninstallStringFormat $props.UninstallString)) {
         Write-Host "Attempting EXE uninstall for $($props.DisplayName)..."
         
         function Invoke-ZluriUninstallExe {
@@ -58,6 +82,9 @@ foreach ($uninstaller in $uninstallersToRemove) {
         }
         
         Invoke-ZluriUninstallExe -uninstallString $props.UninstallString
+    }
+    elseif ($props.UninstallString) {
+        Write-Warning "Invalid uninstall string format, skipping: $($props.UninstallString)"
     }
 }
 
