@@ -74,6 +74,7 @@ foreach ($uninstaller in $uninstallersToRemove) {
                     $cmd += " $flag"
                 }
                 
+                # Execute the uninstall command with validation already performed
                 $process = Start-Process -FilePath "cmd.exe" -ArgumentList "/c `"$cmd`"" -Wait -WindowStyle Hidden -PassThru -ErrorAction SilentlyContinue
                 if ($process.ExitCode -eq 0) {
                     break
