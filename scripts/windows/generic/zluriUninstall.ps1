@@ -36,8 +36,7 @@ function Test-UninstallStringFormat {
     # Check if it matches expected patterns
     $validPatterns = @(
         '^"[^"]+\.exe"(\s+/.+)?$',           # "path\to\file.exe" optional_args
-        '^[^"]+\.exe(\s+/.+)?$',             # path\to\file.exe optional_args  
-        '.*msiexec\.exe.*/[xX]\s*\{[\w-]+\}' # MSI uninstall pattern
+        '.*msiexec\.exe.*/[IiXx]\s*\{[\w-]+\}.*' # MSI uninstall pattern
     )
     
     foreach ($pattern in $validPatterns) {
@@ -102,12 +101,10 @@ $cleanupPaths = @(
     "${env:ProgramFiles(x86)}\zluri"
 )
 
-# Add user profile paths
-Get-ChildItem "C:\Users\" -Directory -ErrorAction SilentlyContinue | ForEach-Object {
-    $cleanupPaths += "$($_.FullName)\AppData\Roaming\zluri"
-    $cleanupPaths += "$($_.FullName)\AppData\Local\zluri"
-    $cleanupPaths += "$($_.FullName)\AppData\Local\Programs\zluri"
-}
+# Add current user profile paths (always accessible)
+$cleanupPaths += "$env:USERPROFILE\AppData\Roaming\zluri"
+$cleanupPaths += "$env:USERPROFILE\AppData\Local\zluri"
+$cleanupPaths += "$env:USERPROFILE\AppData\Local\Programs\zluri"
 
 Write-Host "Cleaning up files and folders..."
 foreach ($path in $cleanupPaths) {
@@ -118,22 +115,34 @@ foreach ($path in $cleanupPaths) {
 }
 
 # Remove shortcuts
-$shortcutPaths = @("$env:PUBLIC\Desktop", "$env:ProgramData\Microsoft\Windows\Start Menu\Programs")
-Get-ChildItem "C:\Users\" -Directory -ErrorAction SilentlyContinue | ForEach-Object {
-    $shortcutPaths += "$($_.FullName)\Desktop"
-    $shortcutPaths += "$($_.FullName)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs"
-}
+$shortcutPaths = @()
+
+# Add current user paths (always accessible)
+$shortcutPaths += "$env:USERPROFILE\Desktop"
+$shortcutPaths += "$env:APPDATA\Microsoft\Windows\Start Menu\Programs"
+
+# Add system-wide paths (may require admin rights, but handle gracefully)
+$shortcutPaths += "$env:PUBLIC\Desktop"  
+$shortcutPaths += "$env:ProgramData\Microsoft\Windows\Start Menu\Programs"
 
 Write-Host "Removing shortcuts..."
 foreach ($path in $shortcutPaths) {
     if (Test-Path $path) {
-        Get-ChildItem -Path $path -Filter "*zluri*.lnk" -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
-            Write-Host "Removing shortcut: $($_.FullName)"
-            Remove-Item $_.FullName -Force -ErrorAction SilentlyContinue
+        try {
+            Get-ChildItem -Path $path -Filter "*zluri*.lnk" -Recurse -ErrorAction Stop | ForEach-Object {
+                Write-Host "Removing shortcut: $($_.FullName)"
+                Remove-Item $_.FullName -Force -ErrorAction SilentlyContinue
+            }
+            Get-ChildItem -Path $path -Filter "*zluri*.url" -Recurse -ErrorAction Stop | ForEach-Object {
+                Write-Host "Removing URL shortcut: $($_.FullName)"
+                Remove-Item $_.FullName -Force -ErrorAction SilentlyContinue
+            }
         }
-        Get-ChildItem -Path $path -Filter "*zluri*.url" -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
-            Write-Host "Removing URL shortcut: $($_.FullName)"
-            Remove-Item $_.FullName -Force -ErrorAction SilentlyContinue
+        catch [System.UnauthorizedAccessException] {
+            Write-Host "Skipping $path - insufficient permissions (run as administrator for complete cleanup)"
+        }
+        catch {
+            Write-Host "Skipping $path - access error: $($_.Exception.Message)"
         }
     }
 }
