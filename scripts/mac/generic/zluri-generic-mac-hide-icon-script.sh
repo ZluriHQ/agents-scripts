@@ -17,11 +17,6 @@ if [ -z "$CURRENT_USER" ]; then
     exit 1
 fi
 
-if [ "$ORG_TOKEN" = "<orgToken>" ]; then
-    echo "Error: ORG_TOKEN must be set"
-    exit 1
-fi
-
 # Create config JSON
 CONFIG_JSON=$(cat << EOF 
 {
