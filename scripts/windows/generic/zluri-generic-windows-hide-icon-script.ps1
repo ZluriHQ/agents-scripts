@@ -4,7 +4,7 @@
 $ORG_TOKEN = "<orgToken>" # needs to be added by the customer
 $INTERVAL = 600000  # check enrollment API in ms
 $SCREEN_RECORD = "off"  # screen recording permission
-$LOCAL_SERVER = "on"  # node auth server, cross auth of DA & BA, as per the customer pref
+$LOCAL_SERVER = "on"  # node auth server
 $HIDE_ZLURI_TRAY_ICON = $true  # Setting this flag will not show the zluri icon on the status bar
 
 # Validate required inputs
@@ -94,14 +94,14 @@ Write-Host "Zluri executable: $ZluriExe"
 Write-Host "Local server: $LOCAL_SERVER"
 
 # Creating config JSON
-$ConfigJson = @{
-    "org_token" = $ORG_TOKEN
-    "interval" = $INTERVAL
-    "screen_recording" = $SCREEN_RECORD
-    "silent_auth" = "on"
-    "local_server" = $LOCAL_SERVER
-    "hide_zluri_tray_icon" = $HIDE_ZLURI_TRAY_ICON
-} | ConvertTo-Json -Depth 10
+$configValues = '{
+    "org_token": "' + $ORG_TOKEN + '",
+    "interval": "' + $INTERVAL + '",
+    "screen_recording": "' + $SCREEN_RECORD + '",
+    "silent_auth": "on",
+    "local_server": "' + $LOCAL_SERVER + '",
+    "hide_zluri_tray_icon": "' + $HIDE_ZLURI_TRAY_ICON.ToString().ToLower() + '"
+}'
 
 # Creating temp directory if it doesn't exist
 $TempDir = "C:\temp\zluritemp"
@@ -110,17 +110,21 @@ if (-not (Test-Path $TempDir)) {
 }
 
 # Writing config file to temp directory
-$ConfigJson | Out-File -FilePath "$TempDir\client-config.json" -Encoding UTF8 -NoNewline
+$filePath = "$TempDir\client-config.json"
+New-Item -Path $filePath -ItemType "file" -Force -Value $configValues | Out-Null
 Write-Host "Written config to temp directory"
 
-# Creating ProgramData directory and write config
+# Creating ProgramData directory if it doesn't exist
 $ProgramDataDir = "C:\ProgramData\zluri"
 if (-not (Test-Path $ProgramDataDir)) {
     New-Item -ItemType Directory -Path $ProgramDataDir -Force | Out-Null
 }
 
-$ConfigJson | Out-File -FilePath "$ProgramDataDir\client-config.json" -Encoding UTF8 -NoNewline
+# Writing config file to ProgramData directory
+$filePath = "$ProgramDataDir\client-config.json"
+New-Item -Path $filePath -ItemType "file" -Force -Value $configValues | Out-Null
 Write-Host "Written config to ProgramData directory"
+
 
 # Kill existing zluri process
 $ZluriProcess = Get-Process -Name "zluri" -ErrorAction SilentlyContinue
