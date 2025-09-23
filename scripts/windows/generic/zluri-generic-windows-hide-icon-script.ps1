@@ -146,7 +146,7 @@ try {
     Start-Process -FilePath "cmd.exe" -ArgumentList $cmdArgs -WindowStyle Hidden -ErrorAction Stop
     
     # Waiting for a moment to start
-    Start-Sleep -Seconds 2
+    Start-Sleep -Seconds 5
     
     # Verifing it started
     if (Get-Process -Name "zluri" -ErrorAction SilentlyContinue) {
