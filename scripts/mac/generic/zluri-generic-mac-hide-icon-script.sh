@@ -48,11 +48,33 @@ mkdir -p "$HOMEDIR/Library/Application Support/zluri"
 echo "$CONFIG_JSON" > "$HOMEDIR/Library/Application Support/zluri/client-config.json"
 echo "Written config to application directory"
 
-# Kill existing zluri process
-if pgrep -x zluri > /dev/null; then
-    echo "Stopping zluri process"
-    pkill -x zluri
-    sleep 5
+PROCESS="zluri"
+TIMEOUT=10   # seconds
+INTERVAL=1   # polling interval
+
+# Send TERM first
+if pkill -x "$PROCESS" >/dev/null 2>&1; then
+    echo "Sent SIGTERM to $PROCESS"
+else
+    echo "No $PROCESS process found"
+    exit 0
+fi
+
+# Wait until the process actually exits (or timeout)
+for ((i=0; i<TIMEOUT; i+=INTERVAL)); do
+    if ! pgrep -x "$PROCESS" >/dev/null; then
+        echo "$PROCESS stopped successfully"
+        exit 0
+    fi
+    sleep "$INTERVAL"
+done
+
+# Final check
+if pgrep -x "$PROCESS" >/dev/null; then
+    echo "Failed to stop $PROCESS"
+    exit 1
+else
+    echo "$PROCESS forcefully stopped"
 fi
 
 # Start zluri application
