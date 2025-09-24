@@ -103,14 +103,9 @@ $configValues = '{
     "hide_zluri_tray_icon": "' + $HIDE_ZLURI_TRAY_ICON.ToString().ToLower() + '"
 }'
 
-# Creating temp directory if it doesn't exist
-$TempDir = "C:\temp\zluritemp"
-if (-not (Test-Path $TempDir)) {
-    New-Item -ItemType Directory -Path $TempDir -Force | Out-Null
-}
 
-# Writing config file to temp directory
-$filePath = "$TempDir\client-config.json"
+# Writing config file to Local App Data directory
+$filePath = "$env:localappdata\client-config.json"
 New-Item -Path $filePath -ItemType "file" -Force -Value $configValues | Out-Null
 Write-Host "Written config to temp directory"
 
