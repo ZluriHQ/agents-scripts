@@ -128,7 +128,7 @@ if ($ZluriProcess) {
     Stop-Process -Name "zluri" -Force -ErrorAction SilentlyContinue
 
     # Wait up to 10 seconds
-    if (Wait-Process -Name "zluri" -Timeout 10 -ErrorAction SilentlyContinue) {
+    if (Wait-Process -Name "zluri" -Timeout 60 -ErrorAction SilentlyContinue) {
         Write-Output "zluri stopped gracefully"
     }
 }
