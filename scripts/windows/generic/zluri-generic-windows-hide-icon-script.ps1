@@ -127,9 +127,10 @@ if ($ZluriProcess) {
     Write-Host "Stopping zluri process"
     Stop-Process -Name "zluri" -Force -ErrorAction SilentlyContinue
 
-    # Wait up to 10 seconds
-    if (Wait-Process -Name "zluri" -Timeout 60 -ErrorAction SilentlyContinue) {
-        Write-Output "zluri stopped gracefully"
+    # Wait up to 60 seconds
+    Wait-Process -Name "zluri" -Timeout 60 -ErrorAction SilentlyContinue  
+    if (-not (Get-Process -Name "zluri" -ErrorAction SilentlyContinue)) {  
+        Write-Output "zluri stopped gracefully"  
     }
 }
 
@@ -144,8 +145,8 @@ try {
     $cmdArgs = "/c start `"`" `"$ZluriExe`""
     Start-Process -FilePath "cmd.exe" -ArgumentList $cmdArgs -WindowStyle Hidden -ErrorAction Stop
     
-    # Wait up to 10 seconds for zluri to start
-    for ($i = 0; $i -lt 10; $i++) {
+    # Wait up to 120 seconds for zluri to start
+    for ($i = 0; $i -lt 120; $i++) {
         $proc = Get-Process -Name "zluri" -ErrorAction SilentlyContinue
         if ($proc) {
             Write-Output "zluri started"
