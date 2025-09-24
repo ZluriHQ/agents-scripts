@@ -106,7 +106,7 @@ $configValues = '{
 
 # Writing config file to Local App Data directory
 $filePath = "$env:localappdata\client-config.json"
-New-Item -Path $filePath -ItemType "file" -Force -Value $configValues | Out-Null
+New-Item -Path $filePath -ItemType "file" -Force -Value $configValues
 Write-Host "Written config to temp directory"
 
 # Creating ProgramData directory if it doesn't exist
@@ -117,7 +117,7 @@ if (-not (Test-Path $ProgramDataDir)) {
 
 # Writing config file to ProgramData directory
 $filePath = "$ProgramDataDir\client-config.json"
-New-Item -Path $filePath -ItemType "file" -Force -Value $configValues | Out-Null
+New-Item -Path $filePath -ItemType "file" -Force -Value $configValues
 Write-Host "Written config to ProgramData directory"
 
 
@@ -126,7 +126,11 @@ $ZluriProcess = Get-Process -Name "zluri" -ErrorAction SilentlyContinue
 if ($ZluriProcess) {
     Write-Host "Stopping zluri process"
     Stop-Process -Name "zluri" -Force -ErrorAction SilentlyContinue
-    Start-Sleep -Seconds 3
+
+    # Wait up to 10 seconds
+    if (Wait-Process -Name "zluri" -Timeout 10 -ErrorAction SilentlyContinue) {
+        Write-Output "zluri stopped gracefully"
+    }
 }
 
 # Start zluri application
@@ -140,8 +144,15 @@ try {
     $cmdArgs = "/c start `"`" `"$ZluriExe`""
     Start-Process -FilePath "cmd.exe" -ArgumentList $cmdArgs -WindowStyle Hidden -ErrorAction Stop
     
-    # Waiting for a moment to start
-    Start-Sleep -Seconds 5
+    # Wait up to 10 seconds for zluri to start
+    for ($i = 0; $i -lt 10; $i++) {
+        $proc = Get-Process -Name "zluri" -ErrorAction SilentlyContinue
+        if ($proc) {
+            Write-Output "zluri started"
+            break
+        }
+        Start-Sleep -Seconds 1
+    }
     
     # Verifing it started
     if (Get-Process -Name "zluri" -ErrorAction SilentlyContinue) {
