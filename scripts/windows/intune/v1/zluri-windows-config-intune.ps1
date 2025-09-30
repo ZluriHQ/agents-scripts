@@ -2,7 +2,18 @@
 $expectedVersion = "4.0.1.0" # Update the minimum version that is expected to be present in the system
 
 #Values to insert into client-config.json file
-$configValues = '{"org_token": "<orgToken>","interval": "3600000","local_server":"on","silent_auth": "on", "hide_zluri_tray_icon": false}' #Replace <orgToken> with valid valid orgToken
+$orgToken = "<your_actual_token>"
+
+$configValues = @"
+{
+  "org_token": "$orgToken",
+  "interval": "3600000",
+  "local_server": "on",
+  "silent_auth": "on",
+  "hide_zluri_tray_icon": false
+}
+"@
+
 
 #########################################################################################
 
@@ -58,12 +69,21 @@ $zluriEntries = Find-ZluriEntries
 Log-Message "Found $($zluriEntries.Count) Zluri entry(ies)"
 
 foreach ($entry in $zluriEntries) {
-    $currentVersion = $entry.Version
-    Log-Message "Zluri Entry: $($entry.DisplayName), Version: $currentVersion"
+    
+    $currentVersionString = $entry.Version
+    Log-Message "Zluri Entry: $($entry.DisplayName), Version: $currentVersionString"
 
-    if ([version]$expectedVersion -gt [version]$currentVersion) {
-        # Log-Message "Version $currentVersion is older than expected $expectedVersion — proceeding to uninstall"
+    $parsedCurrentVersion = $null
+    if (-not $currentVersionString -or -not [version]::TryParse($currentVersionString, [ref]$parsedCurrentVersion)) {
+        Log-Message "Invalid or missing version string: '$currentVersionString'. Skipping this entry."
+        continue
+    }
 
+    $parsedExpectedVersion = [version]$expectedVersion  
+
+    # TODO: Check cases like 4.0.0.0 vs 4.0.0.
+    if ($parsedExpectedVersion -gt $parsedCurrentVersion) {
+    
         try {
             $zluriProcess = Get-Process -Name "zluri" -ErrorAction SilentlyContinue
             if ($zluriProcess) {
@@ -111,7 +131,7 @@ foreach ($entry in $zluriEntries) {
         }
     }
     else {
-        Log-Message "Version $currentVersion is up-to-date"
+        Log-Message "Version $parsedCurrentVersion is up-to-date"
     }
 }
 
