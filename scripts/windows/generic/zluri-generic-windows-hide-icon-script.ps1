@@ -13,13 +13,21 @@ if ($ORG_TOKEN -eq "<orgToken>" -or [string]::IsNullOrEmpty($ORG_TOKEN)) {
     exit 1
 }
 
-# Function to find Zluri installation
+# Function to find Zluri installation entries (works for both per-user and system installs)
 function Find-ZluriEntries {
     $uninstallPaths = @(
         "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
-        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
-        "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
     )
+
+    # Enumerate all user hives (for per-user installs)
+    $userHives = Get-ChildItem "Registry::HKEY_USERS" -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -match '^HKEY_USERS\\S-1-5-21' } # SIDs of real users only
+
+    foreach ($hive in $userHives) {
+        $uninstallPaths += "$($hive.PSPath)\Software\Microsoft\Windows\CurrentVersion\Uninstall"
+    }
+
     $entries = @()
     foreach ($path in $uninstallPaths) {
         if (Test-Path $path) {
@@ -50,28 +58,44 @@ if ($ZluriEntries.Count -eq 0) {
 $ZluriEntry = $ZluriEntries[0]
 $ZluriExe = $null
 
-# Try to extract executable path from uninstall string or common locations
-if ($ZluriEntry.UninstallString) {
+
+# Try to extract executable path from uninstall string
+if (-not $ZluriExe -and $ZluriEntry.UninstallString) {
     # Clean up the uninstall string and extract directory
     $uninstallString = $ZluriEntry.UninstallString -replace '"', ''
-    # Remove any parameters after .exe
-    if ($uninstallString -match '(.+\.exe)') {
+    
+    # Only process if it's an actual executable path (not MSI uninstall)
+    if ($uninstallString -match '(.+\.exe)' -and $uninstallString -notmatch 'MsiExec\.exe') {
         $uninstallExe = $matches[1]
-        $installDir = Split-Path -Path $uninstallExe -Parent
-        $ZluriExe = Join-Path -Path $installDir -ChildPath "zluri.exe"
-        Write-Host "Trying path from uninstall string: $ZluriExe"
+        if (Test-Path $uninstallExe) {
+            $installDir = Split-Path -Path $uninstallExe -Parent
+            $testPath = Join-Path -Path $installDir -ChildPath "zluri.exe"
+            if (Test-Path $testPath) {
+                $ZluriExe = $testPath
+                Write-Host "Found executable via uninstall string: $ZluriExe"
+            }
+        }
     }
 }
 
 # Fallback to common installation paths if not found
-if (-not $ZluriExe -or -not (Test-Path $ZluriExe)) {
-    Write-Host "Executable not found at registry path, trying common locations..."
+if (-not $ZluriExe) {
+    Write-Host "Searching common installation locations..."
+    
+    # Check all user profiles for per-user installs
+    $userProfiles = Get-ChildItem "C:\Users" -Directory -ErrorAction SilentlyContinue
+    
     $commonPaths = @(
         "${env:ProgramFiles}\zluri\zluri.exe",
-        "${env:ProgramFiles(x86)}\zluri\zluri.exe",
-        "${env:LOCALAPPDATA}\Programs\zluri\zluri.exe",
-        "${env:APPDATA}\zluri\zluri.exe"
+        "${env:ProgramFiles(x86)}\zluri\zluri.exe"
     )
+    
+    # Add paths for all user profiles
+    foreach ($profile in $userProfiles) {
+        $commonPaths += Join-Path $profile.FullName "AppData\Local\Programs\zluri\zluri.exe"
+        $commonPaths += Join-Path $profile.FullName "AppData\Roaming\zluri\zluri.exe"
+    }
+    
     foreach ($path in $commonPaths) {
         Write-Host "Checking: $path"
         if (Test-Path $path) {
