@@ -23,7 +23,7 @@ function Find-ZluriEntries {
 
     # Enumerate all user hives (for per-user installs)
     $userHives = Get-ChildItem "Registry::HKEY_USERS" -ErrorAction SilentlyContinue |
-        Where-Object { $_.Name -match '^HKEY_USERS\\S-1-5-21' } # SIDs of real users only
+        Where-Object { $_.Name -match '^HKEY_USERS' }
 
     foreach ($hive in $userHives) {
         $uninstallPaths += "$($hive.PSPath)\Software\Microsoft\Windows\CurrentVersion\Uninstall"
@@ -49,7 +49,7 @@ function Find-ZluriEntries {
 }
 
 # Check if Zluri is installed
-$ZluriEntries = Find-ZluriEntries
+$ZluriEntries = @(Find-ZluriEntries)
 if ($ZluriEntries.Count -eq 0) {
     Write-Host "Error: Zluri is not installed"
     exit 1
