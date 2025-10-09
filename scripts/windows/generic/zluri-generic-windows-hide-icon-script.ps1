@@ -17,7 +17,7 @@ if ($ORG_TOKEN -eq "<orgToken>" -or [string]::IsNullOrEmpty($ORG_TOKEN)) {
 function Find-ZluriEntries {
     $uninstallPaths = @(
         "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
-        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+        "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
         "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
     )
 
@@ -180,7 +180,7 @@ try {
         Start-Sleep -Seconds 1
     }
     
-    # Verifing it started
+    # Verifying it started
     if (Get-Process -Name "zluri" -ErrorAction SilentlyContinue) {
         Write-Host "Zluri started successfully"
     } else {
