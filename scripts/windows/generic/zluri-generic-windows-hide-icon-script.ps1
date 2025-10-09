@@ -23,7 +23,7 @@ function Find-ZluriEntries {
 
     # Enumerate all user hives (for per-user installs)
     $userHives = Get-ChildItem "Registry::HKEY_USERS" -ErrorAction SilentlyContinue |
-        Where-Object { $_.Name -match '^HKEY_USERS\\S-1-5-21' } # SIDs of real users only
+        Where-Object { $_.Name -match '^HKEY_USERS' } # SIDs of real users only
 
     foreach ($hive in $userHives) {
         $uninstallPaths += "$($hive.PSPath)\Software\Microsoft\Windows\CurrentVersion\Uninstall"
@@ -48,34 +48,35 @@ function Find-ZluriEntries {
     return $entries
 }
 
+# Check if Zluri is installed
+$ZluriEntries = @(Find-ZluriEntries)
+if ($ZluriEntries.Count -eq 0) {
+    Write-Host "Error: Zluri is not installed"
+    exit 1
+}
+
+# Get the executable path from the first entry
+$ZluriEntry = $ZluriEntries[0]
 $ZluriExe = $null
 
-# Check if Zluri is installed
-$ZluriEntries = Find-ZluriEntries
-if ($ZluriEntries.Count -gt 0) {
-    Write-Host "Found $($ZluriEntries.Count) Zluri registry entry/entries"
-    $ZluriEntry = $ZluriEntries[0]
+
+# Try to extract executable path from uninstall string
+if (-not $ZluriExe -and $ZluriEntry.UninstallString) {
+    # Clean up the uninstall string and extract directory
+    $uninstallString = $ZluriEntry.UninstallString -replace '"', ''
     
-    # Try to extract executable path from uninstall string
-    if ($ZluriEntry.UninstallString) {
-        # Clean up the uninstall string and extract directory
-        $uninstallString = $ZluriEntry.UninstallString -replace '"', ''
-        
-        # Only process if it's an actual executable path (not MSI uninstall)
-        if ($uninstallString -match '(.+\.exe)' -and $uninstallString -notmatch 'MsiExec\.exe') {
-            $uninstallExe = $matches[1]
-            if (Test-Path $uninstallExe) {
-                $installDir = Split-Path -Path $uninstallExe -Parent
-                $testPath = Join-Path -Path $installDir -ChildPath "zluri.exe"
-                if (Test-Path $testPath) {
-                    $ZluriExe = $testPath
-                    Write-Host "Found executable via uninstall string: $ZluriExe"
-                }
+    # Only process if it's an actual executable path (not MSI uninstall)
+    if ($uninstallString -match '(.+\.exe)' -and $uninstallString -notmatch 'MsiExec\.exe') {
+        $uninstallExe = $matches[1]
+        if (Test-Path $uninstallExe) {
+            $installDir = Split-Path -Path $uninstallExe -Parent
+            $testPath = Join-Path -Path $installDir -ChildPath "zluri.exe"
+            if (Test-Path $testPath) {
+                $ZluriExe = $testPath
+                Write-Host "Found executable via uninstall string: $ZluriExe"
             }
         }
     }
-} else {
-    Write-Host "Warning: Zluri not found in registry"
 }
 
 # Fallback to common installation paths if not found
@@ -113,11 +114,7 @@ if (-not $ZluriExe -or -not (Test-Path $ZluriExe)) {
 }
 
 Write-Host "Current user: $env:USERNAME"
-if ($ZluriEntries.Count -gt 0) {
-    Write-Host "Zluri found: $($ZluriEntries[0].DisplayName) - Version: $($ZluriEntries[0].Version)"
-} else {
-    Write-Host "Zluri found via file system search"
-}
+Write-Host "Zluri found: $($ZluriEntries[0].DisplayName) - Version: $($ZluriEntries[0].Version)"
 Write-Host "Zluri executable: $ZluriExe"
 Write-Host "Local server: $LOCAL_SERVER"
 
