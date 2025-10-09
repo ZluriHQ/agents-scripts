@@ -18,6 +18,7 @@ function Find-ZluriEntries {
     $uninstallPaths = @(
         "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
         "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+        "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
     )
 
     # Enumerate all user hives (for per-user installs)
